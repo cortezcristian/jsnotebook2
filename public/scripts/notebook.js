@@ -203,9 +203,24 @@ angular.module('nodebookApp')
       $log.log("Printing doc...", $scope.notebook);
       window.print();
     }
+    // Download file
+    // https://stackoverflow.com/a/18197341/467034
+    $scope.downloadFile = function(filename, text) {
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    };
 
     $scope.saveDoc = function(row){
       $log.log("Save doc...", $scope.notebook);
+      $scope.downloadFile('notebook.json', JSON.stringify($scope.notebook));
       if (window.NOTEBOOK_ID && window.NOTEBOOK_ID !== '') {
         Restangular.one('api/v1/notes', window.NOTEBOOK_ID).get().then(function(note) {
           note.rows = $scope.notebook.rows;
@@ -423,6 +438,7 @@ angular.module('nodebookApp')
         }
       }
     });
+
 
     // Read from localstorage
     $scope.loadFromLS = function() {
