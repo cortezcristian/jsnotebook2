@@ -8,7 +8,7 @@
  * Controller of the anyandgoApp
  */
 angular.module('nodebookApp')
-  .controller('NotebookCtrl', function ($log, $scope, $timeout,
+  .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, // $modal,
     $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ) {
     // Notebook
     // Load Rows
@@ -42,16 +42,29 @@ angular.module('nodebookApp')
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
-    $scope.createNew = function() {
-      $scope.notebook = {
+    $scope.createNew = function(newNotebook) {
+      var emptyNotebook = {
         title: 'Untitled',
         rows: []
       };
+      $scope.notebook = newNotebook || emptyNotebook;
       $scope.notebook.config = {
         selected_row_pos: 0,
         selected_row_type: 'markdown'
       };
     }
+
+    $scope.loadNotebook = function(template) {
+			template = template || 'notebook-default.json';
+      $http.get($rootScope.config.app_domain+'/json/'+template)
+        .then(function(res) {
+          if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
+            LocalStorageServ.set('jsnotebook', res.data)
+            // $scope.createNew(res.data);
+            $scope.loadFromLS();
+          }
+        })
+    };
 
     $scope.addRow = function(rowInfo){
       $log.log("Adding Row");
@@ -464,6 +477,8 @@ angular.module('nodebookApp')
       }
       if (temp.rows && temp.rows.length > 0) {
         // $scope.notebook.title = temp.title;
+        // clean rows
+        $scope.notebook.rows = [];
         temp.rows.forEach(function(row) {
           $scope.addRow(row);
         });
