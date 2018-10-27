@@ -826,3 +826,15 @@ html,body{
 .stderr {
 	color: red;
 }
+
+.title-edition i {
+  display: none;
+}
+
+.title-edition:hover i {
+  display: inline-block;
+}
+
+.title-edition:hover {
+  pointer: cursor;
+}

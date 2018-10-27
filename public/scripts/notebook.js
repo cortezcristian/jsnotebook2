@@ -17,12 +17,27 @@ angular.module('nodebookApp')
     // Paste Rows
     // Reorder Rows
     // Save Nootebook
-    $scope.notebook = { rows: [] };
+    $scope.notebook = { 
+      title: 'Untitled',
+      rows: [] 
+    };
     $scope.notebook.config = {
       selected_row_pos: 0,
       selected_row_type: 'markdown'
     };
     $rootScope.jsNotebook = $scope.notebook;
+
+    // Edit title
+    $scope.editingTitle = false;
+    $scope.editTitle = function(status) {
+      $scope.editingTitle = status;
+    }
+    $scope.changeTitle = function(event) {
+      console.log(event);
+      if (event.keyCode == 13) {
+        $scope.editTitle(false);
+      }
+    }
 
     //Shotcut
     $scope.selected = $scope.notebook.config.selected_row_pos;

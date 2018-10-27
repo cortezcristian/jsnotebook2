@@ -57,7 +57,7 @@
   <script src="/scripts/app.js"></script>
   <script src="/scripts/notebook.js"></script>
 </head>
-<body class="container-fluid">
+<body class="container-fluid" ng-controller="NotebookCtrl">
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -71,6 +71,20 @@
               <a href="/" style="color:#000; margin-left: 22px;" class="navbar-brand">
                 <span style="display:inline-block;padding-left:5px;">node-book</span>
               </a>
+              <span style="color:#000; margin-left: 22px;" class="navbar-brand title-edition">
+                <span style="display:inline-block; padding-left: 22px;" ng-show='!editingTitle' ng-click="editTitle(true)">
+                  {{notebook.title}}
+                </span>
+                <i class="fa fa-pencil" ng-click="editTitle(true)" ng-show="!editingTitle"></i>
+              </span>
+              <div class="input-group" style="padding-top: 8px;" ng-show='editingTitle'>
+                <input type="text" class="form-control" ng-model="notebook.title" ng-trim ng-keydown="changeTitle($event)" />
+                <div class="input-group-append" style="display: flex;">
+                  <button class="btn btn-outline-secondary" type="button" ng-click="editTitle(false)">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                </div>
+              </div>
             </div>
             <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
                 <ul style="margin-right: 20px;" class="nav navbar-nav navbar-right text-uppercase">
@@ -81,7 +95,7 @@
         </div>
     </nav>
     <div class="pad-top row">
-        <div ng-controller="NotebookCtrl">
+        <div class="jsnotebook-con">
             <div class="con-toolbar">
                 <div class="container">
                     <div class="btn-toolbar">
