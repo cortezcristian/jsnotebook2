@@ -199,6 +199,10 @@ angular.module('nodebookApp')
       }
 
     };
+    $scope.printDoc = function(row){
+      $log.log("Printing doc...", $scope.notebook);
+      window.print();
+    }
 
     $scope.saveDoc = function(row){
       $log.log("Save doc...", $scope.notebook);
