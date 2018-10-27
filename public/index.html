@@ -51,6 +51,8 @@
     <!--
     <script src="//scripts/jquery.singlePageNav.min.js"></script>
      -->
+     <script src="components/angular-ui-ace/ui-ace.js"></script>
+     <script src="components/ace-editor-bower/ace.js"></script>
   <!-- scritps -->
   <script src="/scripts/app.js"></script>
   <script src="/scripts/notebook.js"></script>
@@ -95,6 +97,7 @@
                                     id="row-type" name="row_type" ng-model="notebook.config.selected_row_type" class="form-control form-select">
                                     <option value="markdown">Markdown</option>
                                     <option value="formula">Mathjax</option>
+                                    <option value="code">Code</option>
                                 </select></div>
                         </div>
                         <div class="btn-group"><button ng-click="addRow()" class="btn"><i class="fa fa-plus"></i></button></div>

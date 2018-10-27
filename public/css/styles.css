@@ -809,3 +809,9 @@ html,body{
   max-width:100%;
   overflow-x:hidden
 }
+
+.ace_editor { min-height: 20px; background: #ccc; }
+
+.ace_content { background: #f7f7f7; }
+
+[ui-ace] { border: 1px solid #ccc; }

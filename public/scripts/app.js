@@ -144,6 +144,7 @@ angular
     'ui.grid.exporter',
     'monospaced.elastic',
     'btford.markdown',
+    'ui.ace',
     'restangular'
   ])
   .config(function ($routeProvider, $locationProvider, RestangularProvider,

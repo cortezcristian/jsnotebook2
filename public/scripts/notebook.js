@@ -220,13 +220,23 @@ angular.module('nodebookApp')
         // If edition is off, state false
         $scope.notebook.rows[index].editing = state;
 
-        if(state && !row.row_type.match(/asiento/) ){
+        if(state && row.row_type.match(/(formula|markdown)/) ){
           // Set focus to editor
           $log.log("Set focus to editor");
           var ts = $scope.notebook.rows[index].ts;
           $timeout(function(){
             $('[data-ts="'+ts+'"] textarea:visible').focus();
           }, 100);
+        }
+
+        if(state && row.row_type.match(/code/) ){
+					var editor = ace.edit('editor_'+row.ts);
+					$log.info('Focusing editor:', 'editor_'+row.ts);
+					$timeout(function(){
+						if(!editor.isFocused()){
+							editor.focus();
+						}
+					},1)
         }
       }
     };
@@ -409,6 +419,7 @@ angular.module('nodebookApp')
         });
         */
          var templates = {
+           'code': 'views/smartrow-editor.html',
            'asiento': 'views/smartrow-asiento.html',
            'markdown': 'views/smartrow-markdown.html',
            'formula': 'views/smartrow-formula.html'
@@ -422,6 +433,9 @@ angular.module('nodebookApp')
         function loadTemplate(item) {
           var template =  templates[item.row_type] || "";
           if(template !== "") {
+            if (item.row_type === 'code') {
+							configAce(item, scope, element);
+            }
             $http.get($rootScope.config.app_domain+'/scripts/'+template, { cache: $templateCache })
               .then(function(templateContent) {
                 console.log(template, templateContent);
@@ -450,6 +464,142 @@ angular.module('nodebookApp')
 
        }
      };
+				function configAce(item, scope, element){
+					$log.log("ace: Config Ace", item);
+				scope.aceLoaded = function(_editor){
+					// Editor part
+					var _session = _editor.getSession();
+					var _renderer = _editor.renderer;
+
+					// https://github.com/angular-ui/ui-ace/issues/64
+					//$rootScope.editor = _editor;
+					scope.aceEditor = _editor;
+
+					// Options
+					//_editor.setReadOnly(true);
+					_session.setUndoManager(new ace.UndoManager());
+					_renderer.setShowGutter(false);
+					_editor.setHighlightActiveLine(false);
+
+					// Interceptor
+					_editor.commands.addCommand({
+							name: "saveandrun",
+							exec: function(ed) {
+								$log.log("ace: Execute", item.rowtype);
+								var script = ed.getValue();
+								switch (item.rowtype) {
+									case 'code':
+										ipc.send('vm-run', { script: script, item: item });
+										$timeout(function(){
+										$log.log("requesting keydown...")
+										ipc.send('request-keydown');
+										},5);
+										ed.execCommand("turnoffedition");
+									break;
+									case 'markdown':
+										//item['source'][0] = script;
+										$log.log("Saving md:", item);
+										ed.execCommand("turnoffedition");
+										/*
+										var ind = $rootScope.doc.data.indexOf(item);
+										//item.editing = false;
+										//scope.rowmodel.editing = false;
+										// do it globally? root scope
+										if(ind !== -1){
+											// Set Editing False
+											$rootScope.doc.data[ind].editing = false;
+											// Emit Change
+											//ed.session._emit('change')
+											// enter selecciona todo;
+											// otro enter borra todo;
+											// stop propagation
+											ed.blur();
+											$log.log(scope.aceEditor);
+											$timeout(function(){
+											$rootScope.doc.data[ind].editing = false;
+											scope.aceEditor.session._emit('change')
+											},0)
+											/*
+											var newValue = scope.aceEditor.getValue();
+											$log.log("new Value", newValue);
+											scope.aceEditor.setValue(newValue);
+										}
+											*/
+									break;
+								}
+							},
+							bindKey: {mac: "shift-enter", win: "shift-enter"}
+					});
+
+					// Interceptor
+					_editor.commands.addCommand({
+							name: "turnoffedition",
+							exec: function(ed) {
+								$log.log("ace: Esc", item.rowtype);
+								$log.log("Esc item:", item);
+								var ind = $rootScope.doc.data.indexOf(item);
+								if(ind !== -1){
+									$log.log("Set editing false: ", ind)
+									// Set Editing False
+									$rootScope.doc.data[ind].editing = false;
+									// Emit Change
+									//ed.session._emit('change')
+									//ed.renderer.updateFull();
+									//ed.setValue(ed.getValue(), 1);
+									//var script = ed.getValue();
+									ed.blur();
+									$timeout(function(){
+										$rootScope.doc.data[ind].editing = false;
+										//$rootScope.triggerKeyDown($('body'), 40);
+										try{
+										scope.aceEditor.session._emit('change')
+										}catch(e){
+											$log.log("Error...");
+											$rootScope.doc.data[ind].editing = false;
+											scope.$apply();
+										}
+									},0)
+								}
+							},
+							bindKey: {mac: "esc", win: "esc"}
+					});
+
+					// Events
+					_editor.on("changeSession", function(){
+						$log.log("ace: changeSession");
+					});
+					_session.on("change", function(){
+						$log.log("ace: change");
+					});
+
+					// Update lines
+					var heightUpdateFunction = function() {
+
+						// http://stackoverflow.com/questions/11584061/
+						var newHeight =
+											_editor.getSession().getScreenLength()
+											* _editor.renderer.lineHeight
+											+ _editor.renderer.scrollBar.getWidth();
+
+						element.find('.ace_editor').height(newHeight.toString() + "px");
+						//$('.ace_editor-section').height(newHeight.toString() + "px");
+
+						// This call is required for the editor to fix all of
+						// its inner structure for adapting to a change in size
+						_editor.resize();
+				};
+
+				// Set initial size to match initial content
+				heightUpdateFunction();
+
+				// Whenever a change happens inside the ACE editor, update
+				// the size again
+				_editor.getSession().on('change', heightUpdateFunction);
+
+
+				};
+
+			 }
 
    })
   .directive("mathjaxBind", function() {

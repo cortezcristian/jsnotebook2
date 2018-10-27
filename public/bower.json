@@ -46,6 +46,8 @@
     "MathJax": "components/MathJax#^2.6.0",
     "github-markdown-css": "^2.5.0",
     "angular-ui-grid": "^4.0.3",
-    "angular-ui-select": "^0.19.6"
+    "angular-ui-select": "^0.19.6",
+    "angular-ui-ace": "bower",
+    "ace-editor-bower": "^1.2.2"
   }
 }
