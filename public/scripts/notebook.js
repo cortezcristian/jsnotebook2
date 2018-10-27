@@ -38,9 +38,15 @@ angular.module('nodebookApp')
         ts: (rowInfo) ? rowInfo.ts : Date.now()
       };
 
+
       if (!rowInfo) {
       empty_row.row_type = $scope.notebook.config.selected_row_type;
       empty_row.order = $scope.notebook.rows.length;
+      }
+
+      // custom for editor
+      if (empty_row.row_type === 'code' && empty_row.content === '') {
+        empty_row.content = '// Write your nodeJS code here...'
       }
 
       var len = $scope.notebook.rows.length;
