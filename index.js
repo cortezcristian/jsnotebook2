@@ -1,8 +1,16 @@
 const opener = require('opener');
 const express = require('express');
 const bodyParser = require('body-parser')
-const {VM} = require('vm2');
-const vm = new VM();
+const {VM, NodeVM} = require('vm2');
+let vm = new VM();
+/*
+let vm = new NodeVM({
+  require: {
+    builtin: ['os'],
+    external: true,
+  }
+});
+*/
 
 const host = '127.0.0.1';
 const port = 3333;

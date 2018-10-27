@@ -22,6 +22,7 @@ angular.module('nodebookApp')
       selected_row_pos: 0,
       selected_row_type: 'markdown'
     };
+    $rootScope.jsNotebook = $scope.notebook;
 
     //Shotcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
@@ -46,7 +47,7 @@ angular.module('nodebookApp')
 
       // custom for editor
       if (empty_row.row_type === 'code' && empty_row.content === '') {
-        empty_row.content = '// Write your nodeJS code here...'
+        empty_row.content = '// Write your nodeJS code here... and press shift+enter to execute'
       }
 
       var len = $scope.notebook.rows.length;
@@ -449,19 +450,21 @@ angular.module('nodebookApp')
                 element.html($compile(templateContent.data)(scope));
                 // Configure Editor
 
-                var ts = item.ts;
-                $('[data-ts="'+ts+'"] textarea').on('keydown', function(event){
-                  if (event.keyCode == 13 && event.shiftKey) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    $log.log("Shift+Enter detected");
-                    $(this).blur();
-                    $timeout(function(){
-                      // Mark All as Editing False
-                      $rootScope.offEdditing();
-                    },100);
-                  }
-                });
+                if (item.row_type !== 'code') {
+                  var ts = item.ts;
+                  $('[data-ts="'+ts+'"] textarea').on('keydown', function(event){
+                    if (event.keyCode == 13 && event.shiftKey) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      $log.log("Shift+Enter detected");
+                      $(this).blur();
+                      $timeout(function(){
+                        // Mark All as Editing False
+                        $rootScope.offEdditing();
+                      },100);
+                    }
+                  });
+                }
               });
           }
         }
@@ -493,14 +496,21 @@ angular.module('nodebookApp')
 							exec: function(ed) {
 								$log.log("ace: Execute", item.rowtype);
 								var script = ed.getValue();
-								switch (item.rowtype) {
+								switch (item.row_type) {
 									case 'code':
-										ipc.send('vm-run', { script: script, item: item });
-										$timeout(function(){
-										$log.log("requesting keydown...")
-										ipc.send('request-keydown');
-										},5);
-										ed.execCommand("turnoffedition");
+                    
+                    $http.post('/vm2', {
+                      script: script,
+                      item: item
+                    }).then((res) => {
+                      const result = res.data ? res.data.res : {};
+                      const row = $rootScope.jsNotebook.rows.indexOf(item);
+                      if(row !== -1){
+                        $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
+                        $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
+                      }
+                    });
+										// ed.execCommand("turnoffedition");
 									break;
 									case 'markdown':
 										//item['source'][0] = script;
@@ -543,11 +553,11 @@ angular.module('nodebookApp')
 							exec: function(ed) {
 								$log.log("ace: Esc", item.rowtype);
 								$log.log("Esc item:", item);
-								var ind = $rootScope.doc.data.indexOf(item);
+								var ind = $rootScope.jsNotebook.rows.indexOf(item);
 								if(ind !== -1){
 									$log.log("Set editing false: ", ind)
 									// Set Editing False
-									$rootScope.doc.data[ind].editing = false;
+									$rootScope.jsNotebook.rows[ind].editing = false;
 									// Emit Change
 									//ed.session._emit('change')
 									//ed.renderer.updateFull();
@@ -555,13 +565,14 @@ angular.module('nodebookApp')
 									//var script = ed.getValue();
 									ed.blur();
 									$timeout(function(){
-										$rootScope.doc.data[ind].editing = false;
+										$rootScope.jsNotebook.rows[ind].editing = false;
 										//$rootScope.triggerKeyDown($('body'), 40);
 										try{
 										scope.aceEditor.session._emit('change')
 										}catch(e){
 											$log.log("Error...");
-											$rootScope.doc.data[ind].editing = false;
+											// $rootScope.doc.data[ind].editing = false;
+										  $rootScope.jsNotebook.rows[ind].editing = false;
 											scope.$apply();
 										}
 									},0)

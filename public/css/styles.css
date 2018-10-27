@@ -815,3 +815,14 @@ html,body{
 .ace_content { background: #f7f7f7; }
 
 [ui-ace] { border: 1px solid #ccc; }
+
+.stdout, .stderr {
+  background: wheat;
+  border: 0;
+  border-radius: unset;
+  margin: 2px 0;
+}
+
+.stderr {
+	color: red;
+}
