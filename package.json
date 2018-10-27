@@ -9,6 +9,10 @@
     "opener": "^1.5.1",
     "vm2": "^3.6.4"
   },
+  "preferGlobal": true,
+  "bin": {
+    "jsnotebook2": "./index.js"
+  },
   "devDependencies": {},
   "scripts": {
     "patch-release": "npm version patch && npm publish && git push --follow-tags",
