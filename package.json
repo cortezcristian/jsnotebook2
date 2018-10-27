@@ -1,0 +1,24 @@
+{
+  "name": "jsnotebook2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "opener": "^1.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cortezcristian/jsnotebook2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cortezcristian/jsnotebook2/issues"
+  },
+  "homepage": "https://github.com/cortezcristian/jsnotebook2#readme"
+}

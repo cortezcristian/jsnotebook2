@@ -1,0 +1,10 @@
+<div class="smartrow">
+  <pre class="hide"> {{rowmodel.editing}} {{rowmodel}} </pre>
+  <div ng-show="!rowmodel.editing" btf-markdown="rowmodel.content">
+  </div>
+  <div ng-show="rowmodel.editing || rowmodel.content == ''">
+    <textarea ng-model="rowmodel.content" rows="2" msd-elastic
+      ng-disabled="!rowmodel.editing"
+      class="form-control"></textarea>
+  </div>
+</div>
