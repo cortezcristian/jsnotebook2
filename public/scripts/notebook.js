@@ -623,13 +623,18 @@ angular.module('nodebookApp')
 						$log.log("ace: change");
 					});
 
+          // console.log(item);
 					// Update lines
 					var heightUpdateFunction = function() {
+            // console.log(item);
+            var lines = item.content.split('\n');
+						var lineHeight = _editor.renderer.lineHeight || 20;
 
 						// http://stackoverflow.com/questions/11584061/
 						var newHeight =
-											_editor.getSession().getScreenLength()
-											* _editor.renderer.lineHeight
+											// _editor.getSession().getScreenLength()
+											// * _editor.renderer.lineHeight
+										  lines.length * lineHeight
 											+ _editor.renderer.scrollBar.getWidth();
 
 						element.find('.ace_editor').height(newHeight.toString() + "px");
