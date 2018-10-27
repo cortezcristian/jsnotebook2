@@ -42,6 +42,17 @@ angular.module('nodebookApp')
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
+    $scope.createNew = function() {
+      $scope.notebook = {
+        title: 'Untitled',
+        rows: []
+      };
+      $scope.notebook.config = {
+        selected_row_pos: 0,
+        selected_row_type: 'markdown'
+      };
+    }
+
     $scope.addRow = function(rowInfo){
       $log.log("Adding Row");
       var empty_row = {
