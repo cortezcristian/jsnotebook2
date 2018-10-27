@@ -1,0 +1,21 @@
+{
+  "name": "ace-editor-bower",
+  "version": "1.2.2",
+  "homepage": "https://github.com/Unrestricted-Coding/ace-editor-bower",
+  "authors": [
+    "Shannon Duncan"
+  ],
+  "description": "A bower implementation and registry for ace editor. min-noconflict.",
+  "main": "ace.js",
+  "moduleType": [],
+  "keywords": [
+    "ace",
+    "editor",
+    "ace-editor",
+    "c9",
+    "cloud9",
+    "unrestricted",
+    "coding"
+  ],
+  "license": "BSD"
+}
