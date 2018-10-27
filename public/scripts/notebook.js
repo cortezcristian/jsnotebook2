@@ -27,22 +27,6 @@ angular.module('nodebookApp')
     };
     $rootScope.jsNotebook = $scope.notebook;
 
-    // Read from localstorage
-    $scope.loadFromLS = function() {
-      var temp = LocalStorageServ.get('jsnotebook');
-      if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
-        $scope.notebook.title = temp.title;
-      }
-      if (temp.rows && temp.rows.length > 0) {
-        // $scope.notebook.title = temp.title;
-      }
-    };
-    $scope.loadFromLS();
-    // Persist on localstorage
-    $scope.$watch('notebook', function() {
-      LocalStorageServ.set('jsnotebook', $scope.notebook);
-    }, true);
-
     // Edit title
     $scope.editingTitle = false;
     $scope.editTitle = function(status) {
@@ -435,6 +419,25 @@ angular.module('nodebookApp')
         }
       }
     });
+
+    // Read from localstorage
+    $scope.loadFromLS = function() {
+      var temp = LocalStorageServ.get('jsnotebook');
+      if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
+        $scope.notebook.title = temp.title;
+      }
+      if (temp.rows && temp.rows.length > 0) {
+        // $scope.notebook.title = temp.title;
+        temp.rows.forEach(function(row) {
+          $scope.addRow(row);
+        });
+      }
+    };
+    $scope.loadFromLS();
+    // Persist on localstorage
+    $scope.$watch('notebook', function() {
+      LocalStorageServ.set('jsnotebook', $scope.notebook);
+    }, true);
 
 
   })
