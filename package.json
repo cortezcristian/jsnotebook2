@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "opener": "^1.5.1"
+    "opener": "^1.5.1",
+    "vm2": "^3.6.4"
   },
   "devDependencies": {},
   "scripts": {
