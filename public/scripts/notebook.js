@@ -218,9 +218,14 @@ angular.module('nodebookApp')
       document.body.removeChild(element);
     };
 
+    $scope.downloadDoc = function(row){
+      $log.log("DowDownloadd doc...", $scope.notebook);
+      $scope.downloadFile('notebook.json', JSON.stringify($scope.notebook));
+    };
+
     $scope.saveDoc = function(row){
       $log.log("Save doc...", $scope.notebook);
-      $scope.downloadFile('notebook.json', JSON.stringify($scope.notebook));
+      // $scope.downloadFile('notebook.json', JSON.stringify($scope.notebook));
       if (window.NOTEBOOK_ID && window.NOTEBOOK_ID !== '') {
         Restangular.one('api/v1/notes', window.NOTEBOOK_ID).get().then(function(note) {
           note.rows = $scope.notebook.rows;
