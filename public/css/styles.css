@@ -82,7 +82,6 @@ body .actions-toolbar button{
 body .top-title-bar{
   background-color:#eee;
   opacity:.9;
-  margin:0 -15px 20px -15px;
   padding:11px 20px;
   color:#4a4a4a;
   text-align:left;
@@ -114,8 +113,9 @@ body .top-title-bar i{
   margin-right:5px
 }
 body .top-title-bar.inner{
-  margin:0 -25px 20px -25px;
-  text-align:center
+  text-align:center;
+  background: #fff;
+  border: none;
 }
 body .top-title-bar.sub{
   background-color:#f6f6f6

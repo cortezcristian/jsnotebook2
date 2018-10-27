@@ -8,7 +8,7 @@
  * Controller of the anyandgoApp
  */
 angular.module('nodebookApp')
-  .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, // $modal,
+  .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
     $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ) {
     // Notebook
     // Load Rows
@@ -496,7 +496,78 @@ angular.module('nodebookApp')
       LocalStorageServ.set('jsnotebook', $scope.notebook);
     }, true);
 
+    // Modal instance open
+    $scope.modal_open = false;
 
+    // extra modals start
+    $scope.openSaveAndRestore = function () {
+
+      if($scope.modal_open){
+        return;
+      }else{
+        $scope.modal_open = true;
+        var modalInstance = $modal.open({
+          //animation: $scope.animationsEnabled,
+          templateUrl: $rootScope.config.app_domain+'/scripts/views/save-restore-dialog.html?ts='+Date.now(),
+          controller: 'ModalSaveAndRestore',
+          //size: size,
+          resolve: {
+            nbook: function () {
+              return $scope.notebook;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (f) {
+          $scope.addToGrid = function(formData) {
+            var data = {};
+            angular.forEach(formData, function (value, key) {
+                if(typeof value === 'object' && value.hasOwnProperty('$modelValue')) {
+                    data[key] = value.$modelValue;
+                }
+            });
+
+            if(data){
+              if(data.importe){
+                var newSourceCode = JSON.parse(data.importe);
+                LocalStorageServ.set('jsnotebook', newSourceCode);
+                // $scope.createNew(res.data);
+                $scope.loadFromLS();
+              }
+            }
+
+            $scope.modal_open = false;
+          }
+
+          $scope.addToGrid(f);
+        },function () {
+          $log.info('Modal dismissed at: ' + new Date());
+          $scope.modal_open = false;
+        });
+      }
+    }
+
+  })
+  .controller('ModalSaveAndRestore', function ($scope, $http, $rootScope, $modalInstance,
+    $modal, Restangular, $log, $timeout, nbook) {
+
+      $scope.partida = {};
+      $scope.partida.importe = '';
+
+
+
+      $scope.save = function (formData) {
+        $modalInstance.close(formData);
+      };
+
+      $scope.cancelar = function (event) {
+        event.preventDefault();
+        //event.stopPropagation();
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.nbook = angular.copy(nbook);
+      $scope.partida.importe = JSON.stringify($scope.nbook) || '';
   })
   .directive('smartrow', function($log, $http, $compile, $parse,
       $rootScope, $timeout, $templateCache){

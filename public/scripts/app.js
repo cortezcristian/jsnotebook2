@@ -145,6 +145,8 @@ angular
     'monospaced.elastic',
     'btford.markdown',
     'ui.ace',
+    'ui.bootstrap',
+    // 'toastr',
     'restangular'
   ])
   .config(function ($routeProvider, $locationProvider, RestangularProvider,
