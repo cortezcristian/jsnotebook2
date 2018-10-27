@@ -39,7 +39,7 @@ angular.module('nodebookApp')
       }
     }
 
-    //Shotcut
+    //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
     $scope.addRow = function(rowInfo){
@@ -435,6 +435,12 @@ angular.module('nodebookApp')
         temp.rows.forEach(function(row) {
           $scope.addRow(row);
         });
+        $scope.notebook.config = {
+          selected_row_pos: 0,
+          selected_row_type: temp.rows[0].row_type
+        };
+        $scope.selected = $scope.notebook.config.selected_row_pos;
+        $scope.activateSelection($scope.selected);
       }
     };
     $scope.loadFromLS();
