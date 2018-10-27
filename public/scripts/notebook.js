@@ -9,7 +9,7 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout,
-    $rootScope, smoothScroll, Restangular, hotkeys) {
+    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ) {
     // Notebook
     // Load Rows
     // Add Rows
@@ -17,15 +17,31 @@ angular.module('nodebookApp')
     // Paste Rows
     // Reorder Rows
     // Save Nootebook
-    $scope.notebook = { 
+    $scope.notebook = {
       title: 'Untitled',
-      rows: [] 
+      rows: []
     };
     $scope.notebook.config = {
       selected_row_pos: 0,
       selected_row_type: 'markdown'
     };
     $rootScope.jsNotebook = $scope.notebook;
+
+    // Read from localstorage
+    $scope.loadFromLS = function() {
+      var temp = LocalStorageServ.get('jsnotebook');
+      if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
+        $scope.notebook.title = temp.title;
+      }
+      if (temp.rows && temp.rows.length > 0) {
+        // $scope.notebook.title = temp.title;
+      }
+    };
+    $scope.loadFromLS();
+    // Persist on localstorage
+    $scope.$watch('notebook', function() {
+      LocalStorageServ.set('jsnotebook', $scope.notebook);
+    }, true);
 
     // Edit title
     $scope.editingTitle = false;
@@ -513,7 +529,7 @@ angular.module('nodebookApp')
 								var script = ed.getValue();
 								switch (item.row_type) {
 									case 'code':
-                    
+
                     $http.post('/vm2', {
                       script: script,
                       item: item
@@ -880,5 +896,20 @@ angular.module('nodebookApp')
           }
         }
       }
+    };
+  }).factory('LocalStorageServ', function ($http, $window) {
+    return {
+      set: function(key, data) {
+        return $window.localStorage.setItem(key, JSON.stringify(data));
+      },
+      get: function(key) {
+        return JSON.parse($window.localStorage.getItem(key));
+      },
+      delete: function(key) {
+        return $window.localStorage.removeItem(key);
+      },
+      clear: function() {
+        return $window.localStorage.clear();
+      },
     };
   });
