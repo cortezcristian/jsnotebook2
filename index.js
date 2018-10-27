@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const opener = require('opener');
 const express = require('express');
 const bodyParser = require('body-parser')
