@@ -1,6 +1,6 @@
 {
   "name": "jsnotebook2",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -18,7 +18,7 @@
     "url": "git+https://github.com/cortezcristian/jsnotebook2.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cortezcristian/jsnotebook2/issues"
   },
