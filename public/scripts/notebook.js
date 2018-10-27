@@ -458,7 +458,7 @@ angular.module('nodebookApp')
 
     // Read from localstorage
     $scope.loadFromLS = function() {
-      var temp = LocalStorageServ.get('jsnotebook');
+      var temp = LocalStorageServ.get('jsnotebook') || {};
       if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
         $scope.notebook.title = temp.title;
       }
