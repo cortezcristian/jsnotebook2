@@ -488,6 +488,9 @@ angular.module('nodebookApp')
         };
         $scope.selected = $scope.notebook.config.selected_row_pos;
         $scope.activateSelection($scope.selected);
+      } else {
+        // load deufault notebook
+       $scope.loadNotebook();
       }
     };
     $scope.loadFromLS();
