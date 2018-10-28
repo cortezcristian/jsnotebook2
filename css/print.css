@@ -1,0 +1,23 @@
+.con-toolbar,
+.btn-toolbar {
+  display: none;
+}
+
+.notebook-footer,
+.navbar-fixed-top,
+.navbar-header {
+  display:none;
+}
+
+.pad-top,
+.con-notepad,
+.con-notepad .notepad {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+.smartrow-con.selected.editing .smartrow,
+.smartrow-con.selected .smartrow,
+.smartrow-con .smart-row {
+  border-color:white !important;
+}

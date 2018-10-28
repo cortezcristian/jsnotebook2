@@ -1,0 +1,13 @@
+<div class="smartrow">
+  <pre class="hide"> ===> {{rowmodel.editing}} {{rowmodel}} </pre>
+	<div ui-ace="{ onLoad : aceLoaded, mode: 'javascript', minLines: 1 }"
+		id="{{'editor_'+rowmodel.ts}}"
+		ng-model="rowmodel.content"></div>
+		<!-- ng-model="rowmodel['source'][0]"></div> -->
+
+	<pre class="stdout" ng-show="rowmodel.stdout">{{rowmodel.stdout}}</pre>
+
+	<pre class="stderr" ng-show="rowmodel.stderr">{{rowmodel.stderr}}</pre>
+
+
+</div>
