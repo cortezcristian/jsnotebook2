@@ -15,6 +15,8 @@ $ npm i -g jsnotebook2
 $ jsnotebook2
 ```
 
+Otherwise you can [try the version online](https://cortezcristian.github.io/jsnotebook2/) with limited features
+
 **Examples**
 
 - Insert math formulas, like the following: `\sum i = 1 + 2 + 3 + ... + n`
