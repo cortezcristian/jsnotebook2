@@ -8,7 +8,7 @@ Notes help us think, document, experiment and play with ideas. That's the main r
 
 **Installation**
 
-I recommend you install the command line cli-tool to have a better experience:
+Install the command line cli-tool to have a better experience:
 
 ```
 $ npm i -g jsnotebook2
