@@ -52,6 +52,7 @@ angular.module('nodebookApp')
         selected_row_pos: 0,
         selected_row_type: 'markdown'
       };
+      $rootScope.jsNotebook = $scope.notebook;
     }
 
     $scope.loadNotebook = function(template) {
