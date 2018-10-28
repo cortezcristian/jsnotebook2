@@ -34,6 +34,15 @@ Here's a basic description of the capabilities
 - All of your changes are automatically persisted to your browser local storage
 - Click the save floppy disk button <i class="fa fa-floppy-o"></i> to **restore a previous session** or copy source to your clipboard
 
+**Dependencies**
+
+This package uses
+
+- [vm2](https://github.com/patriksimek/vm2) to create a secure sandbox vm to digest nodejs code
+- [express](https://github.com/expressjs/express) to mount a web server via cli
+- [body-parser](https://github.com/expressjs/body-parser) to parse incoming request bodies source code
+- [opener](https://github.com/domenic/opener) to open a new tab in your favorite browser
+
 **Credits**
 
 Developed by Cristian Cortez cortez.cristian[at]gmail.com 
