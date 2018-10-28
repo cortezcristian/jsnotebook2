@@ -17,7 +17,7 @@ $ npm i -g jsnotebook2
 $ jsnotebook2
 ```
 
-Otherwise you can [try the version online](https://cortezcristian.github.io/jsnotebook2/) with limited features
+Otherwise you can [try the version online](https://cortezcristian.github.io/jsnotebook2/) with limited features or [view the screencast](https://www.youtube.com/watch?v=pal4cDvTmzI&feature=youtu.be)
 
 **Examples**
 
