@@ -1,0 +1,109 @@
+{
+  "title": "Untitled",
+  "rows": [
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "# Notebook\n______\n\n**Rationale**\n\nNotes help us think, document, experiment and play with ideas. That's the main reason for creating this project. I'm a big fan of jupyter notebooks, gists, pastebins and cloud documents but I'm still searching for something better to comunicate, express myself and save my JS notes.",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540662118765,
+      "$$hashKey": "object:17"
+    },
+    {
+      "row_type": "markdown",
+      "order": 7,
+      "content": "**Installation**\n\nI recommend you install the command line cli-tool to have a better experience:\n\n```\n$ npm i -g jsnotebook2\n$ jsnotebook2\n```",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540668716439,
+      "$$hashKey": "object:18"
+    },
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "**Examples**\n\nInsert math formulas, like the following:",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540668737796,
+      "$$hashKey": "object:19"
+    },
+    {
+      "row_type": "formula",
+      "order": 1,
+      "content": "\\sum i = 1 + 2 + 3 + ... + n",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540667542064,
+      "$$hashKey": "object:20"
+    },
+    {
+      "row_type": "markdown",
+      "order": 2,
+      "content": "To take the most out of the experience you might consider looking into markdown and mathjax language references",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540667574701,
+      "$$hashKey": "object:21"
+    },
+    {
+      "row_type": "code",
+      "order": 3,
+      "content": "// Write your nodeJS code here... and press shift+enter to execute (1)\nvar a = 1;\na++;",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540667688473,
+      "$$hashKey": "object:22"
+    },
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "You can execute javascript code rows by pressing `shift+enter` during edition, you can repeat this operation multiple times and receive the updated`stdout`, `stderr`",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540667709971,
+      "$$hashKey": "object:23"
+    },
+    {
+      "row_type": "code",
+      "order": 0,
+      "content": "// Press shift+enter multiple times (2)\na++;",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540667899124,
+      "$$hashKey": "object:24"
+    },
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "**Usage**\n\nHere's a basic description of the capabilities\n\n- Select the row type and hit the plus (+) button on the toolbar to create new rows: Markdown, Mathajax, Code\n- You can use the arrow keys (`up` and `down`) to move between cells, hit `shift+enter` for edition and `esc` to escape edition mode\n- The row selected will be highlighted in `blue` and the cell under edition in `green`\n- You can move rows to a different position in the document, using the up <i class=\"fa fa-arrow-up\"></i> and down <i class=\"fa fa-arrow-down\"> </i> buttons in the tool bar\n- Also you can perform cut <i class=\"fa fa-cut\"></i>, copy <i class=\"fa fa-files-o\"></i>, paste <i class=\"fa fa-paste\"></i> and remove <i class=\"fa fa-trash\"></i> operations on the selected row\n- Notebook can be printed <i class=\"fa fa-print\"></i> and source code be downloaded as json by clicking the download button <i class=\"fa fa-download\"></i>\n- All of your changes are automatically persisted to your browser local storage\n- Click the save floppy disk button <i class=\"fa fa-floppy-o\"></i> to **restore a previous session** or copy source to your clipboard",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540668252712,
+      "$$hashKey": "object:25"
+    },
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "**Credits**\n\nDeveloped by Cristian Cortez cortez.cristian[at]gmail.com \n\n- Twitter [@cortezcristian](https://twitter.com/cortezcristian)\n- LinkedIn [Profile](https://www.linkedin.com/in/cortezcristian/)\n- Github [Profile](https://github.com/cortezcristian)\n\nSpecial thanks to [https://www.nodeknockout.com/](https://www.nodeknockout.com/) that challenges and inspires me to get creative every year",
+      "loaded": true,
+      "editing": false,
+      "selected": true,
+      "ts": 1540668883519,
+      "$$hashKey": "object:26"
+    }
+  ],
+  "config": {
+    "selected_row_pos": 0,
+    "selected_row_type": "markdown"
+  }
+}
