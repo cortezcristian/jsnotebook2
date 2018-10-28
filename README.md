@@ -43,7 +43,7 @@ Here's a basic description of the capabilities
 This package uses
 
 - [vm2](https://github.com/patriksimek/vm2) to create a secure sandbox vm to digest nodejs code
-- [express](https://github.com/expressjs/express) to mount a web server via cli
+- [express](https://github.com/expressjs/express) to mount a web server via cli and serve static files
 - [body-parser](https://github.com/expressjs/body-parser) to parse incoming request bodies source code
 - [opener](https://github.com/domenic/opener) to open a new tab in your favorite browser
 
