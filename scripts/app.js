@@ -180,11 +180,13 @@ angular
     $rootScope.config.app_url = $location.url();
     $rootScope.config.app_path = $location.path();
     $rootScope.config.app_domain = '';
+    var repo = 'jsnotebook2'
     if($location.port()!=='80'){
-        $rootScope.config.app_domain = $location.protocol() + "://" + $location.host() + ":" + $location.port()
+        $rootScope.config.app_domain = $location.protocol() + "://" + $location.host() + ":" + $location.port();
     } else {
         $rootScope.config.app_domain = $location.protocol() + "://" + $location.host();
     }
+    $rootScope.config.app_domain += '/'+repo;
     $rootScope.config.app_api = $rootScope.config.app_domain + '/api/v1/';
     $rootScope.layout = {};
     $rootScope.layout.loading = false;
