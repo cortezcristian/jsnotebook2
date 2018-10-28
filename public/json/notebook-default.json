@@ -74,7 +74,7 @@
     {
       "row_type": "code",
       "order": 0,
-      "content": "// Press shift+enter multiple times (2)\na++;",
+      "content": "// Press shift+enter multiple times (2)\na++;\n// throw new Error('oops');",
       "loaded": true,
       "editing": false,
       "selected": false,
@@ -94,16 +94,23 @@
     {
       "row_type": "markdown",
       "order": 0,
-      "content": "**Credits**\n\nDeveloped by Cristian Cortez cortez.cristian[at]gmail.com \n\n- Twitter [@cortezcristian](https://twitter.com/cortezcristian)\n- LinkedIn [Profile](https://www.linkedin.com/in/cortezcristian/)\n- Github [Profile](https://github.com/cortezcristian)\n\nSpecial thanks to [https://www.nodeknockout.com/](https://www.nodeknockout.com/) that challenges and inspires me to get creative every year",
+      "content": "**Dependencies**\n\nThis package uses\n\n- [vm2](https://github.com/patriksimek/vm2) to create a secure sandbox vm to digest nodejs code\n- [express](https://github.com/expressjs/express) to mount a web server via cli\n- [body-parser](https://github.com/expressjs/body-parser) to parse incoming request bodies source code\n- [opener](https://github.com/domenic/opener) to open a new tab in your favorite browser",
       "loaded": true,
       "editing": false,
       "selected": true,
+      "ts": 1540697386691,
+      "$$hashKey": "object:47"
+    },
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "**Credits**\n\nDeveloped by Cristian Cortez cortez.cristian[at]gmail.com \n\n- Twitter [@cortezcristian](https://twitter.com/cortezcristian)\n- LinkedIn [Profile](https://www.linkedin.com/in/cortezcristian/)\n- Github [Profile](https://github.com/cortezcristian)\n\nSpecial thanks to [https://www.nodeknockout.com/](https://www.nodeknockout.com/) that challenges and inspires me to get creative every year",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
       "ts": 1540668883519,
       "$$hashKey": "object:26"
     }
   ],
-  "config": {
-    "selected_row_pos": 0,
-    "selected_row_type": "markdown"
-  }
+  "config": { "selected_row_pos": 0, "selected_row_type": "markdown" }
 }
