@@ -1,5 +1,7 @@
 # jsnotebook2
 
+Interactive NodeJS Notebook cli-tool
+
 **Rationale**
 
 Notes help us think, document, experiment and play with ideas. That's the main reason for creating this project. I'm a big fan of jupyter notebooks, gists, pastebins and cloud documents but I'm still searching for something better to comunicate, express myself and save my JS notes.
