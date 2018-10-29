@@ -67,6 +67,10 @@ angular.module('nodebookApp')
         })
     };
 
+    $scope.openHelp = function() {
+      hotkeys.toggleCheatSheet();
+    };
+
     $scope.addRow = function(rowInfo){
       $log.log("Adding Row");
       var empty_row = {
