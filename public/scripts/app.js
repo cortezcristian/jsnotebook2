@@ -157,7 +157,7 @@ angular
     var toggleKey = 66; // Letter B
     AngularSpotlightProvider.setSearchInputInfoSearching("Searching ...");
     AngularSpotlightProvider.setSearchInputInfoNoResults("No Results");
-    AngularSpotlightProvider.setSpotlightPlaceholder("Spotlight Search");
+    AngularSpotlightProvider.setSpotlightPlaceholder("Search on jsnotebook");
     AngularSpotlightProvider.setSpotlightToggleCtrlKey(toggleKey); // Ctrl + toggleKey
 
      searchOrchestrationGithubWiki();
