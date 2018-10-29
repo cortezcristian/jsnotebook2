@@ -48,6 +48,7 @@
     "angular-ui-grid": "^4.0.3",
     "angular-ui-select": "^0.19.6",
     "angular-ui-ace": "bower",
-    "ace-editor-bower": "^1.2.2"
+    "ace-editor-bower": "^1.2.2",
+    "angular-spotlight": "^1.0.0"
   }
 }

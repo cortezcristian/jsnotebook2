@@ -838,3 +838,8 @@ html,body{
 .title-edition:hover {
   pointer: cursor;
 }
+
+.ng-spotlight-results-list,
+.ng-spotlight.ng-spotlight-overlay {
+  position: fixed !important;
+}
