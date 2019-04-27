@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Spotlight Directive | Examples</title>
+
+    <!-- Required Dependencies -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+    <!-- Angular Spotlight -->
+    <link href="css/materialTheme.min.css" type="text/css" rel="stylesheet" id="angular-theme">
+    <script src="https://code.angularjs.org/1.4.7/angular.min.js"></script>
+    <script src="js/exampleApp.js"></script>
+    <script src="js/angularSpotlight.min.js"></script>
+
+    <!-- Example Sources -->
+    <link href="css/example.css" type="text/css" rel="stylesheet">
+    <script src="js/example.js"></script>
+</head>
+<body ng-app="de.devjs.angular.spotlight.example">
+    <div class="toolbar">
+        <a href="#" data-toggle="ng-spotlight" class="btn"><span class="fa fa-search"></span></a>
+        <a href="#" class="btn btn-theme" data-theme="material">Material Design</a>
+        <a href="#" class="btn btn-theme" data-theme="dark">Dark</a>
+        <a href="#" class="btn btn-theme" data-theme="light">Light</a>
+    </div>
+    <spotlight-overlay></spotlight-overlay>
+</body>
+</html>

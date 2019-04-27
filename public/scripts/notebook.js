@@ -67,6 +67,10 @@ angular.module('nodebookApp')
         })
     };
 
+    $scope.openHelp = function() {
+      hotkeys.toggleCheatSheet();
+    };
+
     $scope.addRow = function(rowInfo){
       $log.log("Adding Row");
       var empty_row = {
@@ -468,6 +472,12 @@ angular.module('nodebookApp')
         }
       }
     });
+    hotkeys.add({
+      combo: 'shift+enter',
+      description: 'Executes or turns edition mode off for selected row',
+      callback: function(event, hotkey) {
+      }
+    });
 
 
     // Read from localstorage
@@ -550,6 +560,17 @@ angular.module('nodebookApp')
         });
       }
     }
+
+    // Open Spotlight
+    hotkeys.add({
+      combo: 'command+shift+space',
+      description: 'Open Search',
+      callback: function(event, hotkey) {
+        event.preventDefault();
+        $('[data-toggle="ng-spotlight"]').click();
+      }
+    });
+
 
   })
   .controller('ModalSaveAndRestore', function ($scope, $http, $rootScope, $modalInstance,
