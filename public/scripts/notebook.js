@@ -39,6 +39,18 @@ angular.module('nodebookApp')
       }
     }
 
+    // Edit video
+    $scope.editingVideo = false;
+    $scope.editVideo = function(status) {
+      $scope.editingVideo = status;
+    }
+    $scope.changeVideo = function(event) {
+      console.log(event);
+      if (event.keyCode == 13) {
+        $scope.editVideo(false);
+      }
+    }
+
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 

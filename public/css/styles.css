@@ -827,14 +827,17 @@ html,body{
 	color: red;
 }
 
+.video-edition i.fa-pencil { visibility: hidden; }
 .title-edition i {
   display: none;
 }
 
+.video-edition:hover i.fa-pencil { visibility: visible }
 .title-edition:hover i {
   display: inline-block;
 }
 
+.video-edition:hover,
 .title-edition:hover {
   pointer: cursor;
 }
