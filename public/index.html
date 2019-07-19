@@ -144,14 +144,14 @@
                           <span style="color:#000;display: inline-block;padding: 0px;font-size: 14px; height: 35px; padding: 8px 5px 0 5px;" class="navbar-brand video-edition">
                             <i class="fa fa-youtube-square"></i>
                             <span style="display:inline-block;" ng-show='!editingVideo' ng-click="editVideo(true)">
-                              {{notebook.video}}
+                              {{notebook.video.url === "" ? " Add Video URL" : notebook.video.videoId}}
                             </span>
                             <i class="fa fa-pencil" ng-click="editVideo(true)" ng-show="!editingVideo"></i>
                           </span>
                           <div class="input-group" ng-show='editingVideo' style="padding-right: 30px;">
                             <input type="text" class="form-control"
                               placeholder="Paste YouTube URL"
-                              ng-model="notebook.video" ng-trim ng-keydown="changeVideo($event)" />
+                              ng-model="notebook.video.url" ng-trim ng-keydown="changeVideo($event)" />
                             <div class="input-group-append" style="display: flex;">
                               <button class="btn btn-outline-secondary" type="button" ng-click="editVideo(false)">
                                 <i class="fa fa-pencil"></i>

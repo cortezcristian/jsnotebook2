@@ -19,6 +19,10 @@ angular.module('nodebookApp')
     // Save Nootebook
     $scope.notebook = {
       title: 'Untitled',
+      video: {
+        url: '',
+        videoId: '',
+      },
       rows: []
     };
     $scope.notebook.config = {
