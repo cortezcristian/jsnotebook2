@@ -68,6 +68,48 @@ angular.module('nodebookApp')
       }
     });
 
+    $scope.videoPlaying = false;
+    $scope.videoPlayer = {};
+
+    $scope.$on('youtube.player.ready', function ($event, player) {
+      console.log('youtube.player.ready');
+    });
+    $scope.$on('youtube.player.ended', function ($event, player) {
+      console.log('youtube.player.ended');
+    });
+    $scope.$on('youtube.player.playing', function ($event, player) {
+      console.log('youtube.player.playing');
+      $scope.videoPlayer = player;
+      $scope.videoPlaying = true;
+    });
+    $scope.$on('youtube.player.paused', function ($event, player) {
+      console.log('youtube.player.paused');
+      $scope.videoPlaying = false;
+    });
+    $scope.$on('youtube.player.buffering', function ($event, player) {
+      console.log('youtube.player.buffering');
+    });
+    $scope.$on('youtube.player.queued', function ($event, player) {
+      console.log('youtube.player.queued');
+    });
+    $scope.$on('youtube.player.error', function ($event, player) {
+      console.log('youtube.player.error');
+      $scope.videoPlaying = false;
+    });
+    // check positoin
+    var runIt = function(){
+      if($scope.videoPlayer && $scope.videoPlayer.getDuration) {
+        var player = $scope.videoPlayer;
+        var ct = player.getCurrentTime();
+        console.log('youtube.current.time', ct);
+      } else {
+        console.log('youtube.current.loop');
+      }
+      setTimeout(runIt, 2000);
+    };
+    runIt();
+
+
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
