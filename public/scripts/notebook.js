@@ -9,7 +9,7 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
-    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ) {
+    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ, youtubeEmbedUtils) {
     // Notebook
     // Load Rows
     // Add Rows
@@ -20,7 +20,7 @@ angular.module('nodebookApp')
     $scope.notebook = {
       title: 'Untitled',
       video: {
-        url: '',
+        url: 'https://www.youtube.com/watch?v=IUC-8P0zXe8',
         videoId: '',
       },
       rows: []
@@ -54,6 +54,19 @@ angular.module('nodebookApp')
         $scope.editVideo(false);
       }
     }
+    $scope.$watch('notebook.video.url', function(){
+      console.log('Video url changed');
+      var url = $scope.notebook.video.url;
+      var videoId = youtubeEmbedUtils.getIdFromURL($scope.notebook.video.url);
+      if (url.match(/http.*youtube.*/) && videoId !== '') {
+        $scope.notebook.video.videoId = videoId;
+        $scope.notebook.video.msg  = 'ID '+videoId;
+        // $scope.bestPlayer.playVideo();
+      } else {
+        $scope.notebook.video.videoId = '';
+        $scope.notebook.video.msg = 'Invalid Video';
+      }
+    });
 
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;

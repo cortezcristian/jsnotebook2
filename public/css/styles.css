@@ -855,3 +855,13 @@ html,body{
 .ng-spotlight-results-list {
   height: 444px !important;
 }
+
+#video-con {
+  border: 1px solid #ccc;
+  position: fixed;
+  bottom: 5px;
+  right: 20px;
+  overflow: visible;
+  min-height: 80px;
+  min-width: 260px;
+}
