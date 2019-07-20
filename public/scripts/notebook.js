@@ -102,7 +102,7 @@ angular.module('nodebookApp')
     });
     // check positoin
     var runIt = function(){
-      if($scope.videoPlayer && $scope.videoPlayer.getDuration) {
+      if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
         var player = $scope.videoPlayer;
         var ct = player.getCurrentTime();
         console.log('youtube.current.time', ct);
