@@ -643,6 +643,57 @@ angular.module('nodebookApp')
       }
     }
 
+    // Modal instance open
+    $scope.modal_video_open = false;
+
+    // extra modals start
+    $scope.openVideoMilestones = function () {
+
+      if($scope.modal_video_open){
+        return;
+      }else{
+        $scope.modal_video_open = true;
+        var modalInstance = $modal.open({
+          //animation: $scope.animationsEnabled,
+          templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          controller: 'ModalVideoMilestones',
+          //size: size,
+          resolve: {
+            nbook: function () {
+              return $scope.notebook;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (f) {
+          $scope.addToGrid = function(formData) {
+            var data = {};
+            angular.forEach(formData, function (value, key) {
+                if(typeof value === 'object' && value.hasOwnProperty('$modelValue')) {
+                    data[key] = value.$modelValue;
+                }
+            });
+
+            if(data){
+              if(data.importe){
+                var newSourceCode = JSON.parse(data.importe);
+                LocalStorageServ.set('jsnotebook', newSourceCode);
+                // $scope.createNew(res.data);
+                $scope.loadFromLS();
+              }
+            }
+
+            $scope.modal_video_open = false;
+          }
+
+          $scope.addToGrid(f);
+        },function () {
+          $log.info('Modal dismissed at: ' + new Date());
+          $scope.modal_video_open = false;
+        });
+      }
+    }
+
     // Open Spotlight
     hotkeys.add({
       combo: 'command+shift+space',
@@ -656,6 +707,32 @@ angular.module('nodebookApp')
 
   })
   .controller('ModalSaveAndRestore', function ($scope, $http, $rootScope, $modalInstance,
+    $modal, Restangular, $log, $timeout, nbook) {
+
+    $scope.newAction = {
+      time: { start: 0, end: 0},
+      row: 0,
+    };
+
+      $scope.partida = {};
+      $scope.partida.importe = '';
+
+
+
+      $scope.save = function (formData) {
+        $modalInstance.close(formData);
+      };
+
+      $scope.cancelar = function (event) {
+        event.preventDefault();
+        //event.stopPropagation();
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.nbook = angular.copy(nbook);
+      $scope.partida.importe = JSON.stringify($scope.nbook) || '';
+  })
+  .controller('ModalVideoMilestones', function ($scope, $http, $rootScope, $modalInstance,
     $modal, Restangular, $log, $timeout, nbook) {
 
       $scope.partida = {};
