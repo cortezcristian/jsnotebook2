@@ -22,6 +22,10 @@ angular.module('nodebookApp')
       video: {
         url: 'https://www.youtube.com/watch?v=IUC-8P0zXe8',
         videoId: '',
+        actions: [
+          { time: { start: 5, end: 60}, row: 10 },
+          { time: { start: 60, end: 250}, row: 1 },
+        ],
       },
       rows: []
     };
@@ -102,10 +106,17 @@ angular.module('nodebookApp')
         var player = $scope.videoPlayer;
         var ct = player.getCurrentTime();
         console.log('youtube.current.time', ct);
+        var actions = $scope.notebook.video.actions || [];
+        var action = actions.find(function(a){ return ct > a.time.start && ct < a.time.end; })
+        if (action) {
+          console.log('youtube.current.time.action', action);
+          $scope.selected = action.row;
+          $scope.activateSelection($scope.selected);
+        }
       } else {
         console.log('youtube.current.loop');
       }
-      setTimeout(runIt, 2000);
+      $timeout(runIt, 2000);
     };
     runIt();
 
