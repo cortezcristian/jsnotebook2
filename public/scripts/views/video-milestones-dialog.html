@@ -7,10 +7,10 @@
 
 
 <div style="padding:10px">
-  <form role="form" method="post" name="changePartidaForm" ng-submit="save(changePartidaForm)"  novalidate>
+  <form role="form" method="post" name="changePartidaForm" ng-submit="save(nbook)"  novalidate>
 
     <div ng-show="!changedatasuccess">
-     <pre class="hidex">
+     <pre class="hide">
      {{nbook.video.actions | json}}
      </pre>
      <!--
@@ -35,21 +35,28 @@
            <td>{{action.time.end}}</td>
            <td>{{action.row}}</td>
            <td class="text-center">
-             <a class="btn btn-danger" ng-click="actionRemove($index)"><i class="fa fa-trash"></i></a>
+             <a class="btn btn-danger" ng-click="removeAction($event, $index)">
+               <i class="fa fa-trash"></i>
+             </a>
            </td>
          </tr>
          <tr>
            <td>{{nbook.video.actions.length+1}}</td>
            <td>
-            <input class="form-control" type="number" min="0" max="100000" ng-model="newAction.time.start" />
+            <input class="form-control" required type="number" min="0" max="100000" ng-model="newAction.time.start" />
            </td>
            <td>
-            <input class="form-control" type="number" min="{{newAction.time.start+1}}" max="100000" ng-model="newAction.time.end" />
+            <input class="form-control" required type="number" min="{{newAction.time.start+1}}" max="100000" ng-model="newAction.time.end" />
            </td>
            <td>
-            <input class="form-control" type="number" min="0" max="{{nbook.rows.length-1}}" ng-model="newAction.row" />
+            <input class="form-control" required type="number" min="0" max="{{nbook.rows.length-1}}" ng-model="newAction.row" />
            </td>
-           <td>{{action.row}}</td>
+           <td>
+             <button class="btn btn-primary" ng-disabled="changePartidaForm.$invalid" ng-click="addAction($event)">
+               <i class="fa fa-plus"></i>
+               Add
+             </button>
+           </td>
          </tr>
        </tbody>
      </table>

@@ -23,8 +23,8 @@ angular.module('nodebookApp')
         url: 'https://www.youtube.com/watch?v=IUC-8P0zXe8',
         videoId: '',
         actions: [
-          { time: { start: 5, end: 60}, row: 10 },
-          { time: { start: 60, end: 250}, row: 1 },
+          // { time: { start: 5, end: 60}, row: 10 },
+          // { time: { start: 60, end: 250}, row: 1 },
         ],
       },
       rows: []
@@ -568,6 +568,9 @@ angular.module('nodebookApp')
       if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
         $scope.notebook.title = temp.title;
       }
+      if (typeof temp.video !== 'undefined') {
+        $scope.notebook.video = temp.video;
+      }
       if (temp.rows && temp.rows.length > 0) {
         // $scope.notebook.title = temp.title;
         // clean rows
@@ -665,28 +668,14 @@ angular.module('nodebookApp')
           }
         });
 
-        modalInstance.result.then(function (f) {
-          $scope.addToGrid = function(formData) {
-            var data = {};
-            angular.forEach(formData, function (value, key) {
-                if(typeof value === 'object' && value.hasOwnProperty('$modelValue')) {
-                    data[key] = value.$modelValue;
-                }
-            });
-
-            if(data){
-              if(data.importe){
-                var newSourceCode = JSON.parse(data.importe);
-                LocalStorageServ.set('jsnotebook', newSourceCode);
+        modalInstance.result.then(function (data) {
+            if(data && data.rows && data.video && data.video.actions){
+                LocalStorageServ.set('jsnotebook', data);
                 // $scope.createNew(res.data);
                 $scope.loadFromLS();
-              }
             }
 
             $scope.modal_video_open = false;
-          }
-
-          $scope.addToGrid(f);
         },function () {
           $log.info('Modal dismissed at: ' + new Date());
           $scope.modal_video_open = false;
@@ -709,11 +698,7 @@ angular.module('nodebookApp')
   .controller('ModalSaveAndRestore', function ($scope, $http, $rootScope, $modalInstance,
     $modal, Restangular, $log, $timeout, nbook) {
 
-    $scope.newAction = {
-      time: { start: 0, end: 0},
-      row: 0,
-    };
-
+    $scope.nbook = angular.copy(nbook);
       $scope.partida = {};
       $scope.partida.importe = '';
 
@@ -729,16 +714,36 @@ angular.module('nodebookApp')
         $modalInstance.dismiss('cancel');
       };
 
-      $scope.nbook = angular.copy(nbook);
       $scope.partida.importe = JSON.stringify($scope.nbook) || '';
   })
   .controller('ModalVideoMilestones', function ($scope, $http, $rootScope, $modalInstance,
     $modal, Restangular, $log, $timeout, nbook) {
 
+    $scope.nbook = angular.copy(nbook);
+    $scope.newAction = {
+      time: { start: 0, end: 1},
+      row: 0,
+    };
+
+
       $scope.partida = {};
       $scope.partida.importe = '';
 
+      $scope.removeAction = function (event, actionIndex) {
+        event.preventDefault();
+        if (typeof $scope.nbook.video.actions[actionIndex] !== 'undefined') {
+          $scope.nbook.video.actions.splice(actionIndex, 1);
+        }
+      };
 
+      $scope.addAction = function(event) {
+        event.preventDefault();
+        $scope.nbook.video.actions.push($scope.newAction);
+        $scope.newAction = {
+          time: { start: 0, end: 1},
+          row: 0,
+        };
+      };
 
       $scope.save = function (formData) {
         $modalInstance.close(formData);
@@ -750,7 +755,6 @@ angular.module('nodebookApp')
         $modalInstance.dismiss('cancel');
       };
 
-      $scope.nbook = angular.copy(nbook);
       $scope.partida.importe = JSON.stringify($scope.nbook) || '';
   })
   .directive('smartrow', function($log, $http, $compile, $parse,
