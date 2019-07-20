@@ -1,0 +1,91 @@
+<header class="top-title-bar">
+    <h3>
+        <i class="fa fa fa-youtube-play fa-fw"></i>
+        Video Config
+    </h3>
+</header>
+
+
+<div style="padding:10px">
+  <form role="form" method="post" name="changePartidaForm" ng-submit="save(changePartidaForm)"  novalidate>
+
+    <div ng-show="!changedatasuccess">
+     <pre class="hidex">
+     {{nbook.video.actions | json}}
+     </pre>
+     <!--
+     <a href="#" class="btn btn-primary btn-xs pull-right"><b>+</b> Add new categories</a>
+     -->
+     <table class="table">
+       <thead>
+         <tr>
+           <th>Milestone</th>
+           <th>Start (second)</th>
+           <th>End (second)</th>
+           <th>Focus row</th>
+           <th class="text-center">
+             <i class="fa fa-cog"></i>
+           </th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr ng-repeat="action in nbook.video.actions">
+           <td>{{$index+1}}</td>
+           <td>{{action.time.start}}</td>
+           <td>{{action.time.end}}</td>
+           <td>{{action.row}}</td>
+           <td class="text-center">
+             <a class="btn btn-danger" ng-click="actionRemove($index)"><i class="fa fa-trash"></i></a>
+           </td>
+         </tr>
+         <tr>
+           <td>{{nbook.video.actions.length+1}}</td>
+           <td>
+            <input class="form-control" type="number" min="0" max="100000" ng-model="newAction.time.start" />
+           </td>
+           <td>
+            <input class="form-control" type="number" min="{{newAction.time.start+1}}" max="100000" ng-model="newAction.time.end" />
+           </td>
+           <td>
+            <input class="form-control" type="number" min="0" max="{{nbook.rows.length-1}}" ng-model="newAction.row" />
+           </td>
+           <td>{{action.row}}</td>
+         </tr>
+       </tbody>
+     </table>
+
+    <!-- campo importe -->
+    <div class="form-group" ng-class="{ 'has-error': changePartidaForm.importe.$invalid && changePartidaForm.importe.$dirty }">
+        <!--
+        <label for="importe" class="label-control"><b>Current Source Code:</b></label>
+        <textarea ng-model="partida.importe" rows="20"
+          name="importe" id="importe" class="form-control" required
+          style="max-height: 300px;"
+          class="form-control"></textarea>
+        <div class="validation text-danger"
+              ng-messages="changePartidaForm.importe.$error"
+              ng-if="changePartidaForm.importe.$touched || changePartidaForm.$submitted">
+            <div ng-message="required" ng-show="changePartidaForm.importe.$error.required">Este campo es requerido</div>
+            <div ng-message="minlength" ng-show="changePartidaForm.importe.$error.minlength">La importe debe tener al menos 6 caracteres</div>
+          -->
+        </div>
+    </div>
+    <!-- fin campo importe -->
+
+    <div class="form-group top-title-bar inner">
+
+        <a href="#/crud/partida" ng-click="cancelar($event);" class="btn btn-default">Cancel</a>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="changePartidaForm.$invalid">
+          <i class="fa fa-floppy-o"></i>
+          Save
+        </button>
+    </div>
+    </div>
+      <!--
+      <pre>changePartidaForm.$error: {{  changePartidaForm.$error | json }}</pre>
+      <pre>changePartidaForm: {{  changePartidaForm | json }}</pre>
+      -->
+  </form>
+</div>
+
