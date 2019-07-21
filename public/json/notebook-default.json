@@ -1,5 +1,55 @@
 {
   "title": "Quick Start",
+  "video": {
+    "url": "https://www.youtube.com/watch?v=pal4cDvTmzI",
+    "videoId": "pal4cDvTmzI",
+    "actions": [
+      {
+        "time": {
+          "start": 0,
+          "end": 28
+        },
+        "row": 0
+      },
+      {
+        "time": {
+          "start": 28,
+          "end": 65
+        },
+        "row": 1
+      },
+      {
+        "time": {
+          "start": 65,
+          "end": 200
+        },
+        "row": 2
+      },
+      {
+        "time": {
+          "start": 200,
+          "end": 350
+        },
+        "row": 8
+      },
+      {
+        "time": {
+          "start": 350,
+          "end": 405
+        },
+        "row": 9
+      },
+      {
+        "time": {
+          "start": 406,
+          "end": 450
+        },
+        "row": 10
+      }
+    ],
+    "msg": "ID pal4cDvTmzI",
+    "ct": 18
+  },
   "rows": [
     {
       "row_type": "markdown",
@@ -8,8 +58,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540662118765,
-      "$$hashKey": "object:17"
+      "ts": 1540662118765
     },
     {
       "row_type": "markdown",
@@ -17,9 +66,8 @@
       "content": "**Installation**\n\nI recommend you install the command line cli-tool to have a better experience:\n\n```\n$ npm i -g jsnotebook2\n$ jsnotebook2\n```",
       "loaded": true,
       "editing": false,
-      "selected": false,
-      "ts": 1540668716439,
-      "$$hashKey": "object:18"
+      "selected": true,
+      "ts": 1540668716439
     },
     {
       "row_type": "markdown",
@@ -28,8 +76,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540668737796,
-      "$$hashKey": "object:19"
+      "ts": 1540668737796
     },
     {
       "row_type": "formula",
@@ -38,8 +85,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667542064,
-      "$$hashKey": "object:20"
+      "ts": 1540667542064
     },
     {
       "row_type": "markdown",
@@ -48,8 +94,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667574701,
-      "$$hashKey": "object:21"
+      "ts": 1540667574701
     },
     {
       "row_type": "code",
@@ -58,8 +103,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667688473,
-      "$$hashKey": "object:22"
+      "ts": 1540667688473
     },
     {
       "row_type": "markdown",
@@ -68,8 +112,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667709971,
-      "$$hashKey": "object:23"
+      "ts": 1540667709971
     },
     {
       "row_type": "code",
@@ -78,8 +121,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667899124,
-      "$$hashKey": "object:24"
+      "ts": 1540667899124
     },
     {
       "row_type": "markdown",
@@ -88,8 +130,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540668252712,
-      "$$hashKey": "object:25"
+      "ts": 1540668252712
     },
     {
       "row_type": "markdown",
@@ -97,9 +138,8 @@
       "content": "**Dependencies**\n\nThis package uses\n\n- [vm2](https://github.com/patriksimek/vm2) to create a secure sandbox vm to digest nodejs code\n- [express](https://github.com/expressjs/express) to mount a web server via cli\n- [body-parser](https://github.com/expressjs/body-parser) to parse incoming request bodies source code\n- [opener](https://github.com/domenic/opener) to open a new tab in your favorite browser",
       "loaded": true,
       "editing": false,
-      "selected": true,
-      "ts": 1540697386691,
-      "$$hashKey": "object:47"
+      "selected": false,
+      "ts": 1540697386691
     },
     {
       "row_type": "markdown",
@@ -108,9 +148,11 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540668883519,
-      "$$hashKey": "object:26"
+      "ts": 1540668883519
     }
   ],
-  "config": { "selected_row_pos": 0, "selected_row_type": "markdown" }
+  "config": {
+    "selected_row_pos": 0,
+    "selected_row_type": "markdown"
+  }
 }

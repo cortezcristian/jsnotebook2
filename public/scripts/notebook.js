@@ -9,7 +9,7 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
-    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ) {
+    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ, youtubeEmbedUtils) {
     // Notebook
     // Load Rows
     // Add Rows
@@ -19,6 +19,15 @@ angular.module('nodebookApp')
     // Save Nootebook
     $scope.notebook = {
       title: 'Untitled',
+      video: {
+        url: 'https://www.youtube.com/watch?v=pal4cDvTmzI',
+        videoId: '',
+        msg: '',
+        actions: [
+          // { time: { start: 5, end: 60}, row: 10 },
+          // { time: { start: 60, end: 250}, row: 1 },
+        ],
+      },
       rows: []
     };
     $scope.notebook.config = {
@@ -39,12 +48,101 @@ angular.module('nodebookApp')
       }
     }
 
+    // Edit video
+    $scope.editingVideo = false;
+    $scope.editVideo = function(status) {
+      $scope.editingVideo = status;
+    }
+    $scope.changeVideo = function(event) {
+      console.log(event);
+      if (event.keyCode == 13) {
+        $scope.editVideo(false);
+      }
+    }
+    $scope.$watch('notebook.video.url', function(){
+      console.log('Video url changed');
+      var url = $scope.notebook.video.url;
+      var videoId = youtubeEmbedUtils.getIdFromURL($scope.notebook.video.url);
+      if (url.match(/http.*youtube.*/) && videoId !== '') {
+        $scope.notebook.video.videoId = videoId;
+        $scope.notebook.video.msg  = 'ID '+videoId;
+        // $scope.bestPlayer.playVideo();
+      } else {
+        $scope.notebook.video.videoId = '';
+        $scope.notebook.video.msg = 'Invalid Video';
+      }
+    });
+
+    $scope.videoPlaying = false;
+    $scope.videoCurrentTime = 0;
+    $scope.videoPlayer = {};
+
+    $scope.$on('youtube.player.ready', function ($event, player) {
+      console.log('youtube.player.ready');
+    });
+    $scope.$on('youtube.player.ended', function ($event, player) {
+      console.log('youtube.player.ended');
+    });
+    $scope.$on('youtube.player.playing', function ($event, player) {
+      console.log('youtube.player.playing');
+      $scope.videoPlayer = player;
+      $scope.videoPlaying = true;
+    });
+    $scope.$on('youtube.player.paused', function ($event, player) {
+      console.log('youtube.player.paused');
+      $scope.videoPlaying = false;
+    });
+    $scope.$on('youtube.player.buffering', function ($event, player) {
+      console.log('youtube.player.buffering');
+    });
+    $scope.$on('youtube.player.queued', function ($event, player) {
+      console.log('youtube.player.queued');
+    });
+    $scope.$on('youtube.player.error', function ($event, player) {
+      console.log('youtube.player.error');
+      $scope.videoPlaying = false;
+    });
+    // check positoin
+    var runIt = function(){
+      if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
+        var player = $scope.videoPlayer;
+        var ct = player.getCurrentTime();
+        console.log('youtube.current.time', ct);
+        $scope.videoCurrentTime = parseInt(ct, 10);
+        // $scope.notebook.video.ct = parseInt(ct, 10);
+        var actions = $scope.notebook.video.actions || [];
+        var action = actions.find(function(a){ return ct > a.time.start && ct < a.time.end; })
+        if (action) {
+          console.log('youtube.current.time.action', action);
+          $scope.selected = action.row;
+          $scope.activateSelection($scope.selected);
+        }
+      } else {
+        if (!$scope.videoPlayer) {
+          // $scope.notebook.video.ct = 0;
+          $scope.videoCurrentTime = 0;
+        }
+        console.log('youtube.current.loop');
+      }
+      $timeout(runIt, 2000);
+    };
+    runIt();
+
+
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
     $scope.createNew = function(newNotebook) {
       var emptyNotebook = {
         title: 'Untitled',
+        video: {
+          url: '',
+          videoId: '',
+          msg: '',
+          actions: [
+            // { time: { start: 5, end: 60}, row: 10 },
+          ],
+        },
         rows: []
       };
       $scope.notebook = newNotebook || emptyNotebook;
@@ -53,6 +151,12 @@ angular.module('nodebookApp')
         selected_row_type: 'markdown'
       };
       $rootScope.jsNotebook = $scope.notebook;
+      if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
+        $scope.videoPlayer.stopVideo();
+        $scope.videoPlayer.clearVideo();
+        $scope.videoPlaying = false;
+        $scope.videoCurrentTime = 0;
+      }
     }
 
     $scope.loadNotebook = function(template) {
@@ -486,6 +590,9 @@ angular.module('nodebookApp')
       if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
         $scope.notebook.title = temp.title;
       }
+      if (typeof temp.video !== 'undefined') {
+        $scope.notebook.video = temp.video;
+      }
       if (temp.rows && temp.rows.length > 0) {
         // $scope.notebook.title = temp.title;
         // clean rows
@@ -561,6 +668,43 @@ angular.module('nodebookApp')
       }
     }
 
+    // Modal instance open
+    $scope.modal_video_open = false;
+
+    // extra modals start
+    $scope.openVideoMilestones = function () {
+
+      if($scope.modal_video_open){
+        return;
+      }else{
+        $scope.modal_video_open = true;
+        var modalInstance = $modal.open({
+          //animation: $scope.animationsEnabled,
+          templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          controller: 'ModalVideoMilestones',
+          //size: size,
+          resolve: {
+            nbook: function () {
+              return $scope.notebook;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (data) {
+            if(data && data.rows && data.video && data.video.actions){
+                LocalStorageServ.set('jsnotebook', data);
+                // $scope.createNew(res.data);
+                $scope.loadFromLS();
+            }
+
+            $scope.modal_video_open = false;
+        },function () {
+          $log.info('Modal dismissed at: ' + new Date());
+          $scope.modal_video_open = false;
+        });
+      }
+    }
+
     // Open Spotlight
     hotkeys.add({
       combo: 'command+shift+space',
@@ -576,6 +720,7 @@ angular.module('nodebookApp')
   .controller('ModalSaveAndRestore', function ($scope, $http, $rootScope, $modalInstance,
     $modal, Restangular, $log, $timeout, nbook) {
 
+    $scope.nbook = angular.copy(nbook);
       $scope.partida = {};
       $scope.partida.importe = '';
 
@@ -591,7 +736,47 @@ angular.module('nodebookApp')
         $modalInstance.dismiss('cancel');
       };
 
-      $scope.nbook = angular.copy(nbook);
+      $scope.partida.importe = JSON.stringify($scope.nbook) || '';
+  })
+  .controller('ModalVideoMilestones', function ($scope, $http, $rootScope, $modalInstance,
+    $modal, Restangular, $log, $timeout, nbook) {
+
+    $scope.nbook = angular.copy(nbook);
+    $scope.newAction = {
+      time: { start: 0, end: 1},
+      row: 0,
+    };
+
+
+      $scope.partida = {};
+      $scope.partida.importe = '';
+
+      $scope.removeAction = function (event, actionIndex) {
+        event.preventDefault();
+        if (typeof $scope.nbook.video.actions[actionIndex] !== 'undefined') {
+          $scope.nbook.video.actions.splice(actionIndex, 1);
+        }
+      };
+
+      $scope.addAction = function(event) {
+        event.preventDefault();
+        $scope.nbook.video.actions.push($scope.newAction);
+        $scope.newAction = {
+          time: { start: 0, end: 1},
+          row: 0,
+        };
+      };
+
+      $scope.save = function (formData) {
+        $modalInstance.close(formData);
+      };
+
+      $scope.cancelar = function (event) {
+        event.preventDefault();
+        //event.stopPropagation();
+        $modalInstance.dismiss('cancel');
+      };
+
       $scope.partida.importe = JSON.stringify($scope.nbook) || '';
   })
   .directive('smartrow', function($log, $http, $compile, $parse,
