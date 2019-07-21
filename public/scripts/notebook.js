@@ -20,8 +20,9 @@ angular.module('nodebookApp')
     $scope.notebook = {
       title: 'Untitled',
       video: {
-        url: 'https://www.youtube.com/watch?v=IUC-8P0zXe8',
+        url: 'https://www.youtube.com/watch?v=pal4cDvTmzI',
         videoId: '',
+        msg: '',
         actions: [
           // { time: { start: 5, end: 60}, row: 10 },
           // { time: { start: 60, end: 250}, row: 1 },
@@ -127,6 +128,14 @@ angular.module('nodebookApp')
     $scope.createNew = function(newNotebook) {
       var emptyNotebook = {
         title: 'Untitled',
+        video: {
+          url: '',
+          videoId: '',
+          msg: '',
+          actions: [
+            // { time: { start: 5, end: 60}, row: 10 },
+          ],
+        },
         rows: []
       };
       $scope.notebook = newNotebook || emptyNotebook;
