@@ -74,6 +74,7 @@ angular.module('nodebookApp')
     });
 
     $scope.videoPlaying = false;
+    $scope.videoCurrentTime = 0;
     $scope.videoPlayer = {};
 
     $scope.$on('youtube.player.ready', function ($event, player) {
@@ -107,6 +108,8 @@ angular.module('nodebookApp')
         var player = $scope.videoPlayer;
         var ct = player.getCurrentTime();
         console.log('youtube.current.time', ct);
+        $scope.videoCurrentTime = parseInt(ct, 10);
+        // $scope.notebook.video.ct = parseInt(ct, 10);
         var actions = $scope.notebook.video.actions || [];
         var action = actions.find(function(a){ return ct > a.time.start && ct < a.time.end; })
         if (action) {
@@ -115,6 +118,10 @@ angular.module('nodebookApp')
           $scope.activateSelection($scope.selected);
         }
       } else {
+        if (!$scope.videoPlayer) {
+          // $scope.notebook.video.ct = 0;
+          $scope.videoCurrentTime = 0;
+        }
         console.log('youtube.current.loop');
       }
       $timeout(runIt, 2000);
