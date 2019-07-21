@@ -151,6 +151,12 @@ angular.module('nodebookApp')
         selected_row_type: 'markdown'
       };
       $rootScope.jsNotebook = $scope.notebook;
+      if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
+        $scope.videoPlayer.stopVideo();
+        $scope.videoPlayer.clearVideo();
+        $scope.videoPlaying = false;
+        $scope.videoCurrentTime = 0;
+      }
     }
 
     $scope.loadNotebook = function(template) {
