@@ -582,6 +582,25 @@ angular.module('nodebookApp')
       callback: function(event, hotkey) {
       }
     });
+    // Add a new row
+    hotkeys.add({
+      combo: 'command+shift+a',
+      description: 'Add new row',
+      callback: function(event, hotkey) {
+        console.log('Adding new row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[title="Create New Row"]').click();
+          $timeout(function() {
+            var row = $scope.notebook.rows[$scope.selected];
+            if(!row.editing || 1){
+              $scope.turnEditing(row, true);
+            }
+          }, 100);
+        }, 10);
+      }
+    });
+
 
 
     // Read from localstorage
