@@ -46,7 +46,7 @@ app.post('/vm2', (req, res) => {
 
 
 app.listen(port, host, () => {
-  console.log(`Nodebooks: Started on ${host}:${port}`);
+  console.log(`JSNotebook: Started on ${host}:${port}`);
   opener(`http://${host}:${port}`);
 });
 
