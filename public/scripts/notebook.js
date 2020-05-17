@@ -1289,6 +1289,18 @@ angular.module('nodebookApp')
       list: function() {
       },
       search: function(keyword) {
+        var notebooksIndex = LocalStorageServ.get('nb_index') || [];
+        var notebooks = [];
+        var regex = new RegExp('.*'+keyword+'.*', 'gim');
+        notebooksIndex.forEach(function(id) {
+          var nb = LocalStorageServ.get(id);
+          // nb.initial = nb.title[0];
+          notebooks.push(nb);
+        });
+
+        return notebooks.filter(function (n) {
+          return n.title.match(regex);
+        });
       },
       create: function(id, contents) {
         var notebooksIndex = LocalStorageServ.get('nb_index') || [];
