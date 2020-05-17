@@ -9,7 +9,7 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
-    $rootScope, $routeParams, smoothScroll, Restangular, hotkeys, LocalStorageServ,
+    $rootScope, $routeParams, $location, smoothScroll, Restangular, hotkeys, LocalStorageServ,
     NotebookStorageServ,   youtubeEmbedUtils) {
     // Notebook
     // Load Rows
@@ -167,6 +167,8 @@ angular.module('nodebookApp')
         $scope.videoCurrentTime = 0;
       }
       NotebookStorageServ.create($scope.notebook.uniqueId, $scope.notebook);
+      // Redirect to new URL just in case
+      $location.path('/nb/'+$scope.notebook.uniqueId);
     }
 
     $scope.loadNotebook = function(template) {
@@ -623,6 +625,7 @@ angular.module('nodebookApp')
         contents = NotebookStorageServ.getContents($routeParams.id);
         if (contents) {
           temp = contents;
+          $scope.notebook.uniqueId = temp.uniqueId;
         }
       }
       if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
