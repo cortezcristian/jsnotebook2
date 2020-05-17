@@ -104,6 +104,7 @@ angular.module('nodebookApp')
       $scope.videoPlaying = false;
     });
     // check positoin
+    var timer = null;
     var runIt = function(){
       if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
         var player = $scope.videoPlayer;
@@ -125,9 +126,15 @@ angular.module('nodebookApp')
         }
         console.log('youtube.current.loop');
       }
-      $timeout(runIt, 2000);
+      timer = $timeout(runIt, 2000);
     };
     runIt();
+
+    $scope.$on("$destroy", function() {
+      if (timer) {
+        $timeout.cancel(timer);
+      }
+    });
 
 
     //Shortcut
