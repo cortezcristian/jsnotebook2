@@ -9,7 +9,8 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
-    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ, youtubeEmbedUtils) {
+    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ,
+    NotebookStorageServ,   youtubeEmbedUtils) {
     // Notebook
     // Load Rows
     // Add Rows
@@ -135,6 +136,7 @@ angular.module('nodebookApp')
     $scope.createNew = function(newNotebook) {
       var emptyNotebook = {
         title: 'Untitled',
+        uniqueId: 'nb_'+Date.now(),
         video: {
           url: '',
           videoId: '',
@@ -157,6 +159,7 @@ angular.module('nodebookApp')
         $scope.videoPlaying = false;
         $scope.videoCurrentTime = 0;
       }
+      NotebookStorageServ.create($scope.notebook.uniqueId, $scope.notebook);
     }
 
     $scope.loadNotebook = function(template) {
@@ -634,6 +637,9 @@ angular.module('nodebookApp')
     // Persist on localstorage
     $scope.$watch('notebook', function() {
       LocalStorageServ.set('jsnotebook', $scope.notebook);
+      if ($scope.notebook.uniqueId) {
+        NotebookStorageServ.setContents($scope.notebook.uniqueId, $scope.notebook);
+      }
     }, true);
 
     // Modal instance open
@@ -1275,6 +1281,28 @@ angular.module('nodebookApp')
       },
       clear: function() {
         return $window.localStorage.clear();
+      },
+    };
+  }).factory('NotebookStorageServ', function (LocalStorageServ) {
+    var notebooksIndex = LocalStorageServ.get('nb_index') || [];
+    return {
+      list: function() {
+      },
+      search: function(keyword) {
+      },
+      create: function(id, contents) {
+        var notebooksIndex = LocalStorageServ.get('nb_index') || [];
+        notebooksIndex.push(id);
+        LocalStorageServ.set('nb_index', notebooksIndex);
+      },
+      getContents: function(id) {
+        return LocalStorageServ.get(id);
+      },
+      setContents: function(id, notebook) {
+        LocalStorageServ.set(id, notebook);
+      },
+      remove: function(id) {
+        LocalStorageServ.delete(id);
       },
     };
   });
