@@ -172,6 +172,7 @@ angular
           var notebooks = NotebookStorageServProvider.$get().search(term);
           notebooks = notebooks.map(function (nb) {
             nb.name = nb.title;
+            nb.href = '#demo';
             return nb;
           });
           var categories = notebooks.map(function (n) { return n.title[0].toUpperCase(); })
@@ -307,15 +308,18 @@ angular
 
     //$locationProvider.html5Mode(true).hashPrefix('!');
     //$cookies.lang = "en-us";
-    /*
     $routeProvider
       .when('/', {
-        templateUrl: '/scripts/admin/views/main.html',
-        controller: 'MainCtrl'
+        controller: 'NotebookCtrl',
+        templateUrl: '/scripts/views/notebook-view.html',
+      })
+      .when('/nb/:id', {
+        controller: 'NotebookCtrl',
+        templateUrl: '/scripts/views/notebook-view.html',
       })
       .otherwise({
         redirectTo: '/'
-      }); */
+      });
   }).run(function ($rootScope, $location, $route, $timeout, $http, $cookies, $anchorScroll, youtubeEmbedUtils) {
 
     /*
