@@ -174,12 +174,12 @@ angular
             nb.name = nb.title;
             return nb;
           });
-          var categories = notebooks.map(function (n) { return n.title[0]; })
+          var categories = notebooks.map(function (n) { return n.title[0].toUpperCase(); })
             .filter(function(value, index, self) {
               return self.indexOf(value) === index;
-            });
+            }).sort();
           var res = categories.map(c => {
-            return {name: c, items: notebooks.filter(nb => nb.title[0] === c)}
+            return {name: c, items: notebooks.filter(nb => nb.title[0].match(new RegExp('^'+c+'.*', 'i')))}
           });
           defer.resolve(res);
           return defer.promise;
