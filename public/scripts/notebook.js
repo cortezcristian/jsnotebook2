@@ -9,7 +9,7 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
-    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ,
+    $rootScope, $routeParams, smoothScroll, Restangular, hotkeys, LocalStorageServ,
     NotebookStorageServ,   youtubeEmbedUtils) {
     // Notebook
     // Load Rows
@@ -608,7 +608,16 @@ angular.module('nodebookApp')
 
     // Read from localstorage
     $scope.loadFromLS = function() {
+      // get latest one
       var temp = LocalStorageServ.get('jsnotebook') || {};
+      // check load via url
+      var contents = null;
+      if ($routeParams.id) {
+        contents = NotebookStorageServ.getContents($routeParams.id);
+        if (contents) {
+          temp = contents;
+        }
+      }
       if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
         $scope.notebook.title = temp.title;
       }
@@ -629,8 +638,10 @@ angular.module('nodebookApp')
         $scope.selected = $scope.notebook.config.selected_row_pos;
         $scope.activateSelection($scope.selected);
       } else {
-        // load deufault notebook
-       $scope.loadNotebook();
+        if (!contents) {
+          // load deufault notebook
+          $scope.loadNotebook();
+        }
       }
     };
     $scope.loadFromLS();

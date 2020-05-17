@@ -172,7 +172,7 @@ angular
           var notebooks = NotebookStorageServProvider.$get().search(term);
           notebooks = notebooks.map(function (nb) {
             nb.name = nb.title;
-            nb.href = '#demo';
+            nb.href = '#/nb/'+nb.uniqueId;
             return nb;
           });
           var categories = notebooks.map(function (n) { return n.title[0].toUpperCase(); })
