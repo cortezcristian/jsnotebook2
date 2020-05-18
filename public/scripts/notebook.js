@@ -602,13 +602,73 @@ angular.module('nodebookApp')
         console.log('Adding new row');
         event.preventDefault();
         $timeout(function() {
-          $('[title="Create New Row"]').click();
+          $('[ng-click="addRow()"]').click();
           $timeout(function() {
             var row = $scope.notebook.rows[$scope.selected];
             if(!row.editing || 1){
               $scope.turnEditing(row, true);
             }
           }, 100);
+        }, 10);
+      }
+    });
+    // Copy selected row
+    hotkeys.add({
+      combo: 'command+shift+c',
+      description: 'Copy selected row',
+      callback: function(event, hotkey) {
+        console.log('Copy selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="copyRow()"]').click();
+        }, 10);
+      }
+    });
+    // Paste selected row
+    hotkeys.add({
+      combo: 'command+shift+v',
+      description: 'Paste selected row',
+      callback: function(event, hotkey) {
+        console.log('Paste selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="pasteRow()"]').click();
+        }, 10);
+      }
+    });
+    // Cut selected row
+    hotkeys.add({
+      combo: 'command+shift+x',
+      description: 'Cut selected row',
+      callback: function(event, hotkey) {
+        console.log('Cut selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="cutRow()"]').click();
+        }, 10);
+      }
+    });
+    // Move Up selected row
+    hotkeys.add({
+      combo: 'command+shift+up',
+      description: 'Move Up selected Row',
+      callback: function(event, hotkey) {
+        console.log('Copy selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $(`[ng-click="moveRow('up')"]`).click();
+        }, 10);
+      }
+    });
+    // Move Down selected row
+    hotkeys.add({
+      combo: 'command+shift+down',
+      description: 'Move Down selected Row',
+      callback: function(event, hotkey) {
+        console.log('Copy selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $(`[ng-click="moveRow('down')"]`).click();
         }, 10);
       }
     });
