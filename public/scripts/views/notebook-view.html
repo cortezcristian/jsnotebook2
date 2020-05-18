@@ -56,7 +56,10 @@
                           <button data-toggle="ng-spotlight" title="Search Notebooks (Cmd+Shift+Space)" class="btn"><i class="fa fa-search"></i></button>
                           <button ng-click="openHelp()" title="Shortcuts Help (?)" class="btn"><i class="fa fa-keyboard-o"></i></button>
                         </div>
-                        <div class="btn-group"><button ng-click="openSaveAndRestore()" title="Open Save Preferences" class="btn"><i class="fa fa-floppy-o"></i></button></div>
+                        <div class="btn-group">
+                          <button ng-click="openSaveAndRestore()" title="Load from URL" class="btn"><i class="fa fa-globe"></i></button>
+                          <button ng-click="openSaveAndRestore()" title="Open Save Preferences" class="btn"><i class="fa fa-floppy-o"></i></button>
+                        </div>
                         <div class="btn-group">
                           <button ng-click="downloadDoc()" class="btn" title="Download Notebook Source"><i class="fa fa-download"></i></button>
                           <button ng-click="printDoc()" title="Print Notebook (Cmd+p)" class="btn"><i class="fa fa-print"></i></button>
