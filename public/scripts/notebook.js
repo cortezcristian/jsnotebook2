@@ -690,9 +690,9 @@ angular.module('nodebookApp')
 
 
     // Read from localstorage
-    $scope.loadFromLS = function() {
+    $scope.loadFromLS = function(data) {
       // get latest one
-      var temp = LocalStorageServ.get('jsnotebook') || {};
+      var temp = data || LocalStorageServ.get('jsnotebook') || {};
       // check load via url
       var contents = null;
       if ($routeParams.id) {
@@ -728,7 +728,37 @@ angular.module('nodebookApp')
         }
       }
     };
-    $scope.loadFromLS();
+
+    $scope.validateNotebook = function(res) {
+      if (res && typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
+        $scope.loadFromLS(res.data);
+        return true;
+      }
+      return false;
+    }
+
+    $scope.loadFromURL = function() {
+      // Load from URL Example
+      // http://127.0.0.1:3333/#/?url=https://raw.githubusercontent.com/cortezcristian/jsnotebook2/master/public/json/notebook-default.json
+      // var defer = $q.defer();
+      $http.get($routeParams.url)
+        .then(function(res) {
+          var loaded = $scope.validateNotebook(res);
+          if (!loaded) {
+            $scope.loadFromLS();
+          }
+        }).catch(function() {
+          $scope.loadFromLS();
+        });
+      // return defer.promise;
+    };
+
+    // Check if load from URL is available
+    if ($routeParams.url) {
+      $scope.loadFromURL();
+    } else {
+      $scope.loadFromLS();
+    }
     // Persist on localstorage
     $scope.$watch('notebook', function() {
       LocalStorageServ.set('jsnotebook', $scope.notebook);
