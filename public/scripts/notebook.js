@@ -20,6 +20,9 @@ angular.module('nodebookApp')
     // Save Nootebook
     $scope.notebook = {
       title: 'Untitled',
+      externalnotebook: {
+        url: '',
+      },
       video: {
         url: 'https://www.youtube.com/watch?v=pal4cDvTmzI',
         videoId: '',
@@ -48,6 +51,34 @@ angular.module('nodebookApp')
         $scope.editTitle(false);
       }
     }
+
+    // Edit externalnotebook
+    $scope.editingExternalNotebook = false;
+    $scope.gotoExternalNotebook = function(status) {
+      $scope.editingExternalNotebook = status;
+      $location.path('/?url='+$scope.notebook.externalnotebook.url);
+    }
+    $scope.editExternalNotebook = function(status) {
+      $scope.editingExternalNotebook = status;
+    }
+    $scope.changeExternalNotebook = function(event) {
+      console.log(event);
+      if (event.keyCode == 13) {
+        $scope.editExternalNotebook(false);
+      }
+    }
+    $scope.$watch('notebook.externalnotebook.url', function(){
+      console.log('ExternalNotebook url changed');
+      var url = $scope.notebook.externalnotebook.url;
+      var externalnotebookId = url.substring(0, 18)+'...';
+      if (url.match(/http.*\/.*/)) {
+        $scope.notebook.externalnotebook.externalnotebookId = externalnotebookId;
+        $scope.notebook.externalnotebook.msg  = externalnotebookId;
+      } else {
+        $scope.notebook.externalnotebook.externalnotebookId = '';
+        $scope.notebook.externalnotebook.msg = 'Invalid URL';
+      }
+    });
 
     // Edit video
     $scope.editingVideo = false;
