@@ -167,6 +167,8 @@ angular.module('nodebookApp')
         $scope.videoCurrentTime = 0;
       }
       NotebookStorageServ.create($scope.notebook.uniqueId, $scope.notebook);
+      // Scroll top
+      $('html,body').animate({scrollTop: 0 }, 100);
       // Redirect to new URL just in case
       $location.path('/nb/'+$scope.notebook.uniqueId);
     }
