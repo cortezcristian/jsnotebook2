@@ -183,6 +183,17 @@ angular.module('nodebookApp')
         })
     };
 
+    $scope.loadQuickStart = function(template) {
+			template = template || 'notebook-default.json';
+      $http.get($rootScope.config.app_domain+'/json/'+template)
+        .then(function(res) {
+          if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
+            NotebookStorageServ.setContents(res.data.uniqueId, res.data);
+            $location.path('/nb/'+res.data.uniqueId);
+          }
+        })
+    };
+
     $scope.openHelp = function() {
       hotkeys.toggleCheatSheet();
     };

@@ -865,3 +865,20 @@ html,body{
   min-height: 80px;
   min-width: 260px;
 }
+
+.nb-action-top-btn {
+  border: 1px solid #cecece;
+  margin: 10px 5px 0;
+  /* height: 27px; */
+  line-height: 20px !important;
+  padding: 5px 12px !important;
+  border-radius: 4px;
+}
+
+.nb-action-top-btn.primary:hover {
+  border: 1px solid #333;
+}
+
+.nb-action-top-btn.secondary {
+  border: 1px solid transparent;
+}
