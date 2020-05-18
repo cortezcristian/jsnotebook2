@@ -141,9 +141,10 @@ angular.module('nodebookApp')
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
     $scope.createNew = function(newNotebook) {
+      var rand = Math.round(Math.random()*10000000000000000);
       var emptyNotebook = {
         title: 'Untitled',
-        uniqueId: 'nb_'+Date.now(),
+        uniqueId: 'nb_'+Date.now()+rand,
         video: {
           url: '',
           videoId: '',
@@ -827,7 +828,7 @@ angular.module('nodebookApp')
     // Open Spotlight
     hotkeys.add({
       combo: 'command+shift+space',
-      description: 'Open Search',
+      description: 'Open Notebooks Search Dialog',
       callback: function(event, hotkey) {
         event.preventDefault();
         $('[data-toggle="ng-spotlight"]').click();
@@ -1393,7 +1394,7 @@ angular.module('nodebookApp')
         });
 
         return notebooks.filter(function (n) {
-          return n.title.match(regex);
+          return n && n.title && n.title.match(regex);
         });
       },
       create: function(id, contents) {
