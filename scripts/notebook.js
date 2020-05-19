@@ -815,7 +815,7 @@ angular.module('nodebookApp')
         $scope.modal_open = true;
         var modalInstance = $modal.open({
           //animation: $scope.animationsEnabled,
-          templateUrl: $rootScope.config.app_domain+'/scripts/views/save-restore-dialog.html?ts='+Date.now(),
+          templateUrl: './scripts/views/save-restore-dialog.html?ts='+Date.now(),
           controller: 'ModalSaveAndRestore',
           //size: size,
           resolve: {
@@ -866,7 +866,7 @@ angular.module('nodebookApp')
         $scope.modal_video_open = true;
         var modalInstance = $modal.open({
           //animation: $scope.animationsEnabled,
-          templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          templateUrl: './scripts/views/video-milestones-dialog.html?ts='+Date.now(),
           controller: 'ModalVideoMilestones',
           //size: size,
           resolve: {
