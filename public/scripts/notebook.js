@@ -56,7 +56,9 @@ angular.module('nodebookApp')
     $scope.editingExternalNotebook = false;
     $scope.gotoExternalNotebook = function(status) {
       $scope.editingExternalNotebook = status;
-      $location.path('/?url='+$scope.notebook.externalnotebook.url);
+      if ($scope.notebook.externalnotebook.url.match(/http.*\/.*/)) {
+        $location.path('/').search({ url: $scope.notebook.externalnotebook.url });
+      }
     }
     $scope.editExternalNotebook = function(status) {
       $scope.editingExternalNotebook = status;
@@ -777,6 +779,9 @@ angular.module('nodebookApp')
           var loaded = $scope.validateNotebook(res);
           if (!loaded) {
             $scope.loadFromLS();
+          } else {
+            $scope.notebook.externalnotebook = $scope.notebook.externalnotebook.url || {};
+            $scope.notebook.externalnotebook.url = $routeParams.url;
           }
         }).catch(function() {
           $scope.loadFromLS();
