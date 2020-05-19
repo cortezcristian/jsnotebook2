@@ -984,10 +984,10 @@ angular.module('nodebookApp')
         });
         */
          var templates = {
-           'code': '/views/smartrow-editor.html',
-           'asiento': '/views/smartrow-asiento.html',
-           'markdown': '/views/smartrow-markdown.html',
-           'formula': '/views/smartrow-formula.html'
+           'code': 'views/smartrow-editor.html',
+           'asiento': 'views/smartrow-asiento.html',
+           'markdown': 'views/smartrow-markdown.html',
+           'formula': 'views/smartrow-formula.html'
          };
 
 
@@ -1001,7 +1001,7 @@ angular.module('nodebookApp')
             if (item.row_type === 'code') {
 							configAce(item, scope, element);
             }
-            $http.get($rootScope.config.app_domain+'/scripts/'+template, { cache: $templateCache })
+            $http.get('./scripts/'+template, { cache: $templateCache })
               .then(function(templateContent) {
                 console.log(template, templateContent);
                 scope.rowmodel.loaded = true;
