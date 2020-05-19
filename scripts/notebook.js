@@ -9,7 +9,8 @@
  */
 angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
-    $rootScope, smoothScroll, Restangular, hotkeys, LocalStorageServ) {
+    $rootScope, $routeParams, $location, smoothScroll, Restangular, hotkeys, LocalStorageServ,
+    NotebookStorageServ,   youtubeEmbedUtils) {
     // Notebook
     // Load Rows
     // Add Rows
@@ -19,6 +20,18 @@ angular.module('nodebookApp')
     // Save Nootebook
     $scope.notebook = {
       title: 'Untitled',
+      externalnotebook: {
+        url: '',
+      },
+      video: {
+        url: 'https://www.youtube.com/watch?v=pal4cDvTmzI',
+        videoId: '',
+        msg: '',
+        actions: [
+          // { time: { start: 5, end: 60}, row: 10 },
+          // { time: { start: 60, end: 250}, row: 1 },
+        ],
+      },
       rows: []
     };
     $scope.notebook.config = {
@@ -39,12 +52,140 @@ angular.module('nodebookApp')
       }
     }
 
+    // Edit externalnotebook
+    $scope.editingExternalNotebook = false;
+    $scope.gotoExternalNotebook = function(status) {
+      $scope.editingExternalNotebook = status;
+      if ($scope.notebook.externalnotebook.url.match(/http.*\/.*/)) {
+        $location.path('/').search({ url: $scope.notebook.externalnotebook.url });
+      }
+    }
+    $scope.editExternalNotebook = function(status) {
+      $scope.editingExternalNotebook = status;
+    }
+    $scope.changeExternalNotebook = function(event) {
+      console.log(event);
+      if (event.keyCode == 13) {
+        $scope.editExternalNotebook(false);
+      }
+    }
+    $scope.$watch('notebook.externalnotebook.url', function(){
+      console.log('ExternalNotebook url changed');
+      var url = $scope.notebook.externalnotebook.url;
+      var externalnotebookId = url.substring(0, 18)+'...';
+      if (url.match(/http.*\/.*/)) {
+        $scope.notebook.externalnotebook.externalnotebookId = externalnotebookId;
+        $scope.notebook.externalnotebook.msg  = externalnotebookId;
+      } else {
+        $scope.notebook.externalnotebook.externalnotebookId = '';
+        $scope.notebook.externalnotebook.msg = 'Invalid URL';
+      }
+    });
+
+    // Edit video
+    $scope.editingVideo = false;
+    $scope.editVideo = function(status) {
+      $scope.editingVideo = status;
+    }
+    $scope.changeVideo = function(event) {
+      console.log(event);
+      if (event.keyCode == 13) {
+        $scope.editVideo(false);
+      }
+    }
+    $scope.$watch('notebook.video.url', function(){
+      console.log('Video url changed');
+      var url = $scope.notebook.video.url;
+      var videoId = youtubeEmbedUtils.getIdFromURL($scope.notebook.video.url);
+      if (url.match(/http.*youtube.*/) && videoId !== '') {
+        $scope.notebook.video.videoId = videoId;
+        $scope.notebook.video.msg  = 'ID '+videoId;
+        // $scope.bestPlayer.playVideo();
+      } else {
+        $scope.notebook.video.videoId = '';
+        $scope.notebook.video.msg = 'Invalid Video';
+      }
+    });
+
+    $scope.videoPlaying = false;
+    $scope.videoCurrentTime = 0;
+    $scope.videoPlayer = {};
+
+    $scope.$on('youtube.player.ready', function ($event, player) {
+      console.log('youtube.player.ready');
+    });
+    $scope.$on('youtube.player.ended', function ($event, player) {
+      console.log('youtube.player.ended');
+    });
+    $scope.$on('youtube.player.playing', function ($event, player) {
+      console.log('youtube.player.playing');
+      $scope.videoPlayer = player;
+      $scope.videoPlaying = true;
+    });
+    $scope.$on('youtube.player.paused', function ($event, player) {
+      console.log('youtube.player.paused');
+      $scope.videoPlaying = false;
+    });
+    $scope.$on('youtube.player.buffering', function ($event, player) {
+      console.log('youtube.player.buffering');
+    });
+    $scope.$on('youtube.player.queued', function ($event, player) {
+      console.log('youtube.player.queued');
+    });
+    $scope.$on('youtube.player.error', function ($event, player) {
+      console.log('youtube.player.error');
+      $scope.videoPlaying = false;
+    });
+    // check positoin
+    var timer = null;
+    var runIt = function(){
+      if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
+        var player = $scope.videoPlayer;
+        var ct = player.getCurrentTime();
+        console.log('youtube.current.time', ct);
+        $scope.videoCurrentTime = parseInt(ct, 10);
+        // $scope.notebook.video.ct = parseInt(ct, 10);
+        var actions = $scope.notebook.video.actions || [];
+        var action = actions.find(function(a){ return ct > a.time.start && ct < a.time.end; })
+        if (action) {
+          console.log('youtube.current.time.action', action);
+          $scope.selected = action.row;
+          $scope.activateSelection($scope.selected);
+        }
+      } else {
+        if (!$scope.videoPlayer) {
+          // $scope.notebook.video.ct = 0;
+          $scope.videoCurrentTime = 0;
+        }
+        console.log('youtube.current.loop');
+      }
+      timer = $timeout(runIt, 2000);
+    };
+    runIt();
+
+    $scope.$on("$destroy", function() {
+      if (timer) {
+        $timeout.cancel(timer);
+      }
+    });
+
+
     //Shortcut
     $scope.selected = $scope.notebook.config.selected_row_pos;
 
     $scope.createNew = function(newNotebook) {
+      var rand = Math.round(Math.random()*10000000000000000);
       var emptyNotebook = {
         title: 'Untitled',
+        uniqueId: 'nb_'+Date.now()+rand,
+        video: {
+          url: '',
+          videoId: '',
+          msg: '',
+          actions: [
+            // { time: { start: 5, end: 60}, row: 10 },
+          ],
+        },
         rows: []
       };
       $scope.notebook = newNotebook || emptyNotebook;
@@ -52,6 +193,18 @@ angular.module('nodebookApp')
         selected_row_pos: 0,
         selected_row_type: 'markdown'
       };
+      $rootScope.jsNotebook = $scope.notebook;
+      if($scope.videoPlaying && $scope.videoPlayer && $scope.videoPlayer.getDuration) {
+        $scope.videoPlayer.stopVideo();
+        $scope.videoPlayer.clearVideo();
+        $scope.videoPlaying = false;
+        $scope.videoCurrentTime = 0;
+      }
+      NotebookStorageServ.create($scope.notebook.uniqueId, $scope.notebook);
+      // Scroll top
+      $('html,body').animate({scrollTop: 0 }, 100);
+      // Redirect to new URL just in case
+      $location.path('/nb/'+$scope.notebook.uniqueId);
     }
 
     $scope.loadNotebook = function(template) {
@@ -64,6 +217,21 @@ angular.module('nodebookApp')
             $scope.loadFromLS();
           }
         })
+    };
+
+    $scope.loadQuickStart = function(template) {
+			template = template || 'notebook-default.json';
+      $http.get($rootScope.config.app_domain+'/json/'+template)
+        .then(function(res) {
+          if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
+            NotebookStorageServ.setContents(res.data.uniqueId, res.data);
+            $location.path('/nb/'+res.data.uniqueId);
+          }
+        })
+    };
+
+    $scope.openHelp = function() {
+      hotkeys.toggleCheatSheet();
     };
 
     $scope.addRow = function(rowInfo){
@@ -467,13 +635,111 @@ angular.module('nodebookApp')
         }
       }
     });
+    hotkeys.add({
+      combo: 'shift+enter',
+      description: 'Executes or turns edition mode off for selected row',
+      callback: function(event, hotkey) {
+      }
+    });
+    // Add a new row
+    hotkeys.add({
+      combo: 'command+shift+a',
+      description: 'Add new row',
+      callback: function(event, hotkey) {
+        console.log('Adding new row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="addRow()"]').click();
+          $timeout(function() {
+            var row = $scope.notebook.rows[$scope.selected];
+            if(!row.editing || 1){
+              $scope.turnEditing(row, true);
+            }
+          }, 100);
+        }, 10);
+      }
+    });
+    // Copy selected row
+    hotkeys.add({
+      combo: 'command+shift+c',
+      description: 'Copy selected row',
+      callback: function(event, hotkey) {
+        console.log('Copy selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="copyRow()"]').click();
+        }, 10);
+      }
+    });
+    // Paste selected row
+    hotkeys.add({
+      combo: 'command+shift+v',
+      description: 'Paste selected row',
+      callback: function(event, hotkey) {
+        console.log('Paste selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="pasteRow()"]').click();
+        }, 10);
+      }
+    });
+    // Cut selected row
+    hotkeys.add({
+      combo: 'command+shift+x',
+      description: 'Cut selected row',
+      callback: function(event, hotkey) {
+        console.log('Cut selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $('[ng-click="cutRow()"]').click();
+        }, 10);
+      }
+    });
+    // Move Up selected row
+    hotkeys.add({
+      combo: 'command+shift+up',
+      description: 'Move Up selected Row',
+      callback: function(event, hotkey) {
+        console.log('Copy selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $(`[ng-click="moveRow('up')"]`).click();
+        }, 10);
+      }
+    });
+    // Move Down selected row
+    hotkeys.add({
+      combo: 'command+shift+down',
+      description: 'Move Down selected Row',
+      callback: function(event, hotkey) {
+        console.log('Copy selected row');
+        event.preventDefault();
+        $timeout(function() {
+          $(`[ng-click="moveRow('down')"]`).click();
+        }, 10);
+      }
+    });
+
 
 
     // Read from localstorage
-    $scope.loadFromLS = function() {
-      var temp = LocalStorageServ.get('jsnotebook') || {};
+    $scope.loadFromLS = function(data) {
+      // get latest one
+      var temp = data || LocalStorageServ.get('jsnotebook') || {};
+      // check load via url
+      var contents = null;
+      if ($routeParams.id) {
+        contents = NotebookStorageServ.getContents($routeParams.id);
+        if (contents) {
+          temp = contents;
+          $scope.notebook.uniqueId = temp.uniqueId;
+        }
+      }
       if (typeof temp.title === 'string' && temp.title !== 'Untitled') {
         $scope.notebook.title = temp.title;
+      }
+      if (typeof temp.video !== 'undefined') {
+        $scope.notebook.video = temp.video;
       }
       if (temp.rows && temp.rows.length > 0) {
         // $scope.notebook.title = temp.title;
@@ -489,14 +755,52 @@ angular.module('nodebookApp')
         $scope.selected = $scope.notebook.config.selected_row_pos;
         $scope.activateSelection($scope.selected);
       } else {
-        // load deufault notebook
-       $scope.loadNotebook();
+        if (!contents) {
+          // load deufault notebook
+          $scope.loadNotebook();
+        }
       }
     };
-    $scope.loadFromLS();
+
+    $scope.validateNotebook = function(res) {
+      if (res && typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
+        $scope.loadFromLS(res.data);
+        return true;
+      }
+      return false;
+    }
+
+    $scope.loadFromURL = function() {
+      // Load from URL Example
+      // http://127.0.0.1:3333/#/?url=https://raw.githubusercontent.com/cortezcristian/jsnotebook2/master/public/json/notebook-default.json
+      // var defer = $q.defer();
+      $http.get($routeParams.url)
+        .then(function(res) {
+          var loaded = $scope.validateNotebook(res);
+          if (!loaded) {
+            $scope.loadFromLS();
+          } else {
+            $scope.notebook.externalnotebook = $scope.notebook.externalnotebook.url || {};
+            $scope.notebook.externalnotebook.url = $routeParams.url;
+          }
+        }).catch(function() {
+          $scope.loadFromLS();
+        });
+      // return defer.promise;
+    };
+
+    // Check if load from URL is available
+    if ($routeParams.url) {
+      $scope.loadFromURL();
+    } else {
+      $scope.loadFromLS();
+    }
     // Persist on localstorage
     $scope.$watch('notebook', function() {
       LocalStorageServ.set('jsnotebook', $scope.notebook);
+      if ($scope.notebook.uniqueId) {
+        NotebookStorageServ.setContents($scope.notebook.uniqueId, $scope.notebook);
+      }
     }, true);
 
     // Modal instance open
@@ -533,9 +837,9 @@ angular.module('nodebookApp')
             if(data){
               if(data.importe){
                 var newSourceCode = JSON.parse(data.importe);
-                LocalStorageServ.set('jsnotebook', newSourceCode);
+                // LocalStorageServ.set('jsnotebook', newSourceCode);
                 // $scope.createNew(res.data);
-                $scope.loadFromLS();
+                $scope.loadFromLS(newSourceCode);
               }
             }
 
@@ -550,10 +854,59 @@ angular.module('nodebookApp')
       }
     }
 
+    // Modal instance open
+    $scope.modal_video_open = false;
+
+    // extra modals start
+    $scope.openVideoMilestones = function () {
+
+      if($scope.modal_video_open){
+        return;
+      }else{
+        $scope.modal_video_open = true;
+        var modalInstance = $modal.open({
+          //animation: $scope.animationsEnabled,
+          templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          controller: 'ModalVideoMilestones',
+          //size: size,
+          resolve: {
+            nbook: function () {
+              return $scope.notebook;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (data) {
+            if(data && data.rows && data.video && data.video.actions){
+                LocalStorageServ.set('jsnotebook', data);
+                // $scope.createNew(res.data);
+                $scope.loadFromLS();
+            }
+
+            $scope.modal_video_open = false;
+        },function () {
+          $log.info('Modal dismissed at: ' + new Date());
+          $scope.modal_video_open = false;
+        });
+      }
+    }
+
+    // Open Spotlight
+    hotkeys.add({
+      combo: 'command+shift+space',
+      description: 'Open Notebooks Search Dialog',
+      callback: function(event, hotkey) {
+        event.preventDefault();
+        $('[data-toggle="ng-spotlight"]').click();
+      }
+    });
+
+
   })
   .controller('ModalSaveAndRestore', function ($scope, $http, $rootScope, $modalInstance,
     $modal, Restangular, $log, $timeout, nbook) {
 
+    $scope.nbook = angular.copy(nbook);
       $scope.partida = {};
       $scope.partida.importe = '';
 
@@ -569,7 +922,47 @@ angular.module('nodebookApp')
         $modalInstance.dismiss('cancel');
       };
 
-      $scope.nbook = angular.copy(nbook);
+      $scope.partida.importe = JSON.stringify($scope.nbook) || '';
+  })
+  .controller('ModalVideoMilestones', function ($scope, $http, $rootScope, $modalInstance,
+    $modal, Restangular, $log, $timeout, nbook) {
+
+    $scope.nbook = angular.copy(nbook);
+    $scope.newAction = {
+      time: { start: 0, end: 1},
+      row: 0,
+    };
+
+
+      $scope.partida = {};
+      $scope.partida.importe = '';
+
+      $scope.removeAction = function (event, actionIndex) {
+        event.preventDefault();
+        if (typeof $scope.nbook.video.actions[actionIndex] !== 'undefined') {
+          $scope.nbook.video.actions.splice(actionIndex, 1);
+        }
+      };
+
+      $scope.addAction = function(event) {
+        event.preventDefault();
+        $scope.nbook.video.actions.push($scope.newAction);
+        $scope.newAction = {
+          time: { start: 0, end: 1},
+          row: 0,
+        };
+      };
+
+      $scope.save = function (formData) {
+        $modalInstance.close(formData);
+      };
+
+      $scope.cancelar = function (event) {
+        event.preventDefault();
+        //event.stopPropagation();
+        $modalInstance.dismiss('cancel');
+      };
+
       $scope.partida.importe = JSON.stringify($scope.nbook) || '';
   })
   .directive('smartrow', function($log, $http, $compile, $parse,
@@ -1049,6 +1442,40 @@ angular.module('nodebookApp')
       },
       clear: function() {
         return $window.localStorage.clear();
+      },
+    };
+  }).factory('NotebookStorageServ', function (LocalStorageServ) {
+    var notebooksIndex = LocalStorageServ.get('nb_index') || [];
+    return {
+      list: function() {
+      },
+      search: function(keyword) {
+        var notebooksIndex = LocalStorageServ.get('nb_index') || [];
+        var notebooks = [];
+        var regex = new RegExp('.*'+keyword+'.*', 'gim');
+        notebooksIndex.forEach(function(id) {
+          var nb = LocalStorageServ.get(id);
+          // nb.initial = nb.title[0];
+          notebooks.push(nb);
+        });
+
+        return notebooks.filter(function (n) {
+          return n && n.title && n.title.match(regex);
+        });
+      },
+      create: function(id, contents) {
+        var notebooksIndex = LocalStorageServ.get('nb_index') || [];
+        notebooksIndex.push(id);
+        LocalStorageServ.set('nb_index', notebooksIndex);
+      },
+      getContents: function(id) {
+        return LocalStorageServ.get(id);
+      },
+      setContents: function(id, notebook) {
+        LocalStorageServ.set(id, notebook);
+      },
+      remove: function(id) {
+        LocalStorageServ.delete(id);
       },
     };
   });

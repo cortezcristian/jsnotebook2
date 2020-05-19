@@ -1,15 +1,65 @@
 {
-  "title": "Notebook",
+  "title": "Quick Start",
+  "uniqueId": "quick-start",
+  "video": {
+    "url": "https://www.youtube.com/watch?v=pal4cDvTmzI",
+    "videoId": "pal4cDvTmzI",
+    "actions": [
+      {
+        "time": {
+          "start": 0,
+          "end": 28
+        },
+        "row": 0
+      },
+      {
+        "time": {
+          "start": 28,
+          "end": 65
+        },
+        "row": 1
+      },
+      {
+        "time": {
+          "start": 65,
+          "end": 200
+        },
+        "row": 2
+      },
+      {
+        "time": {
+          "start": 200,
+          "end": 350
+        },
+        "row": 8
+      },
+      {
+        "time": {
+          "start": 350,
+          "end": 405
+        },
+        "row": 9
+      },
+      {
+        "time": {
+          "start": 406,
+          "end": 450
+        },
+        "row": 10
+      }
+    ],
+    "msg": "ID pal4cDvTmzI",
+    "ct": 18
+  },
   "rows": [
     {
       "row_type": "markdown",
       "order": 0,
-      "content": "# Notebook\n______\n\n**Rationale**\n\nNotes help us think, document, experiment and play with ideas. That's the main reason for creating this project. I'm a big fan of jupyter notebooks, gists, pastebins and cloud documents but I'm still searching for something better to comunicate, express myself and save my JS notes.",
+      "content": "# Quick Start\n______\n\n**Rationale**\n\nNotes help us think, document, experiment and play with ideas. That's the main reason for creating this project. I'm a big fan of jupyter notebooks, gists, pastebins and cloud documents but I'm still searching for something better to comunicate, express myself and save my JS notes.",
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540662118765,
-      "$$hashKey": "object:17"
+      "ts": 1540662118765
     },
     {
       "row_type": "markdown",
@@ -17,9 +67,8 @@
       "content": "**Installation**\n\nI recommend you install the command line cli-tool to have a better experience:\n\n```\n$ npm i -g jsnotebook2\n$ jsnotebook2\n```",
       "loaded": true,
       "editing": false,
-      "selected": false,
-      "ts": 1540668716439,
-      "$$hashKey": "object:18"
+      "selected": true,
+      "ts": 1540668716439
     },
     {
       "row_type": "markdown",
@@ -28,8 +77,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540668737796,
-      "$$hashKey": "object:19"
+      "ts": 1540668737796
     },
     {
       "row_type": "formula",
@@ -38,8 +86,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667542064,
-      "$$hashKey": "object:20"
+      "ts": 1540667542064
     },
     {
       "row_type": "markdown",
@@ -48,8 +95,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667574701,
-      "$$hashKey": "object:21"
+      "ts": 1540667574701
     },
     {
       "row_type": "code",
@@ -58,8 +104,7 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667688473,
-      "$$hashKey": "object:22"
+      "ts": 1540667688473
     },
     {
       "row_type": "markdown",
@@ -68,18 +113,16 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667709971,
-      "$$hashKey": "object:23"
+      "ts": 1540667709971
     },
     {
       "row_type": "code",
       "order": 0,
-      "content": "// Press shift+enter multiple times (2)\na++;",
+      "content": "// Press shift+enter multiple times (2)\na++;\n// throw new Error('oops');",
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540667899124,
-      "$$hashKey": "object:24"
+      "ts": 1540667899124
     },
     {
       "row_type": "markdown",
@@ -88,8 +131,16 @@
       "loaded": true,
       "editing": false,
       "selected": false,
-      "ts": 1540668252712,
-      "$$hashKey": "object:25"
+      "ts": 1540668252712
+    },
+    {
+      "row_type": "markdown",
+      "order": 0,
+      "content": "**Dependencies**\n\nThis package uses\n\n- [vm2](https://github.com/patriksimek/vm2) to create a secure sandbox vm to digest nodejs code\n- [express](https://github.com/expressjs/express) to mount a web server via cli\n- [body-parser](https://github.com/expressjs/body-parser) to parse incoming request bodies source code\n- [opener](https://github.com/domenic/opener) to open a new tab in your favorite browser",
+      "loaded": true,
+      "editing": false,
+      "selected": false,
+      "ts": 1540697386691
     },
     {
       "row_type": "markdown",
@@ -97,9 +148,8 @@
       "content": "**Credits**\n\nDeveloped by Cristian Cortez cortez.cristian[at]gmail.com \n\n- Twitter [@cortezcristian](https://twitter.com/cortezcristian)\n- LinkedIn [Profile](https://www.linkedin.com/in/cortezcristian/)\n- Github [Profile](https://github.com/cortezcristian)\n\nSpecial thanks to [https://www.nodeknockout.com/](https://www.nodeknockout.com/) that challenges and inspires me to get creative every year",
       "loaded": true,
       "editing": false,
-      "selected": true,
-      "ts": 1540668883519,
-      "$$hashKey": "object:26"
+      "selected": false,
+      "ts": 1540668883519
     }
   ],
   "config": {
