@@ -209,7 +209,7 @@ angular.module('nodebookApp')
 
     $scope.loadNotebook = function(template) {
 			template = template || 'notebook-default.json';
-      $http.get($rootScope.config.app_domain+'/json/'+template)
+      $http.get('./json/'+template)
         .then(function(res) {
           if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
             LocalStorageServ.set('jsnotebook', res.data)
@@ -221,7 +221,7 @@ angular.module('nodebookApp')
 
     $scope.loadQuickStart = function(template) {
 			template = template || 'notebook-default.json';
-      $http.get($rootScope.config.app_domain+'/json/'+template)
+      $http.get('./json/'+template)
         .then(function(res) {
           if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
             NotebookStorageServ.setContents(res.data.uniqueId, res.data);
@@ -815,7 +815,8 @@ angular.module('nodebookApp')
         $scope.modal_open = true;
         var modalInstance = $modal.open({
           //animation: $scope.animationsEnabled,
-          templateUrl: $rootScope.config.app_domain+'/scripts/views/save-restore-dialog.html?ts='+Date.now(),
+          // templateUrl: $rootScope.config.app_domain+'/scripts/views/save-restore-dialog.html?ts='+Date.now(),
+          templateUrl: './scripts/views/save-restore-dialog.html?ts='+Date.now(),
           controller: 'ModalSaveAndRestore',
           //size: size,
           resolve: {
@@ -866,7 +867,8 @@ angular.module('nodebookApp')
         $scope.modal_video_open = true;
         var modalInstance = $modal.open({
           //animation: $scope.animationsEnabled,
-          templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          // templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          templateUrl: './scripts/views/video-milestones-dialog.html?ts='+Date.now(),
           controller: 'ModalVideoMilestones',
           //size: size,
           resolve: {
@@ -1001,7 +1003,7 @@ angular.module('nodebookApp')
             if (item.row_type === 'code') {
 							configAce(item, scope, element);
             }
-            $http.get($rootScope.config.app_domain+'/scripts/'+template, { cache: $templateCache })
+            $http.get('./scripts/'+template, { cache: $templateCache })
               .then(function(templateContent) {
                 console.log(template, templateContent);
                 scope.rowmodel.loaded = true;
@@ -1056,8 +1058,11 @@ angular.module('nodebookApp')
 								var script = ed.getValue();
 								switch (item.row_type) {
 									case 'code':
+                    // Detect if VM2 is enabled
+                  $http.get('/vm2').then(function(res) {
+                    // TODO: Add condition that detects this endpoint return true
 
-                    $http.post('/vm2', {
+                    return $http.post('/vm2', {
                       script: script,
                       item: item
                     }).then((res) => {
@@ -1068,6 +1073,24 @@ angular.module('nodebookApp')
                         $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
                       }
                     });
+                  }).catch(function(e) {
+                    console.log('VM2 contact failed', e);
+                    if (e.status === 404) {
+                      var row = $rootScope.jsNotebook.rows.indexOf(item);
+                      try {
+                        var result = eval(script);
+                        if(row !== -1){
+                          $rootScope.jsNotebook.rows[row].stdout = result || '';
+                          $rootScope.jsNotebook.rows[row].stderr = '';
+                        }
+                      } catch (e) {
+                        if(row !== -1){
+                          $rootScope.jsNotebook.rows[row].stdout = '';
+                          $rootScope.jsNotebook.rows[row].stderr = e.toString() || '';
+                        }
+                      }
+                    }
+                  });
 										// ed.execCommand("turnoffedition");
 									break;
 									case 'markdown':
