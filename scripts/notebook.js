@@ -984,10 +984,10 @@ angular.module('nodebookApp')
         });
         */
          var templates = {
-           'code': './views/smartrow-editor.html',
-           'asiento': './views/smartrow-asiento.html',
-           'markdown': './views/smartrow-markdown.html',
-           'formula': './views/smartrow-formula.html'
+           'code': '/views/smartrow-editor.html',
+           'asiento': '/views/smartrow-asiento.html',
+           'markdown': '/views/smartrow-markdown.html',
+           'formula': '/views/smartrow-formula.html'
          };
 
 
