@@ -837,9 +837,9 @@ angular.module('nodebookApp')
             if(data){
               if(data.importe){
                 var newSourceCode = JSON.parse(data.importe);
-                LocalStorageServ.set('jsnotebook', newSourceCode);
+                // LocalStorageServ.set('jsnotebook', newSourceCode);
                 // $scope.createNew(res.data);
-                $scope.loadFromLS();
+                $scope.loadFromLS(newSourceCode);
               }
             }
 
