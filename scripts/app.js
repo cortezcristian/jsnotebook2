@@ -311,11 +311,11 @@ angular
     $routeProvider
       .when('/', {
         controller: 'NotebookCtrl',
-        templateUrl: '/scripts/views/notebook-view.html',
+        templateUrl: './scripts/views/notebook-view.html',
       })
       .when('/nb/:id', {
         controller: 'NotebookCtrl',
-        templateUrl: '/scripts/views/notebook-view.html',
+        templateUrl: './scripts/views/notebook-view.html',
       })
       .otherwise({
         redirectTo: '/'
