@@ -1,5 +1,26 @@
 'use strict';
 
+// var evalContext = function() { };
+function scopeEval(scope, script) {
+  // return Function('return (' + script + ')').bind(scope)();
+  // return Function('"use strict";' + script + '').bind(scope)();
+  // https://stackoverflow.com/a/57943152/467034
+  try {
+    var res = new Function('' + script + '').bind(scope)();
+    return {
+      stdout: res,
+      stderr: '',
+      scope: scope
+    }
+  } catch (e) {
+    return {
+      stdout: '',
+      stderr: e.toString(),
+      scope: scope
+    }
+  }
+}
+
 /**
  * @ngdoc function
  * @name anyandgoApp.controller:NotebookCtrl
@@ -39,6 +60,8 @@ angular.module('nodebookApp')
       selected_row_type: 'markdown'
     };
     $rootScope.jsNotebook = $scope.notebook;
+    // evalContext = function() {};
+    // evalContext = null;
 
     // Edit title
     $scope.editingTitle = false;
@@ -209,7 +232,7 @@ angular.module('nodebookApp')
 
     $scope.loadNotebook = function(template) {
 			template = template || 'notebook-default.json';
-      $http.get($rootScope.config.app_domain+'/json/'+template)
+      $http.get('./json/'+template)
         .then(function(res) {
           if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
             LocalStorageServ.set('jsnotebook', res.data)
@@ -221,7 +244,7 @@ angular.module('nodebookApp')
 
     $scope.loadQuickStart = function(template) {
 			template = template || 'notebook-default.json';
-      $http.get($rootScope.config.app_domain+'/json/'+template)
+      $http.get('./json/'+template)
         .then(function(res) {
           if (typeof res.data !== 'undefined' && angular.isDefined(res.data.rows)) {
             NotebookStorageServ.setContents(res.data.uniqueId, res.data);
@@ -815,7 +838,8 @@ angular.module('nodebookApp')
         $scope.modal_open = true;
         var modalInstance = $modal.open({
           //animation: $scope.animationsEnabled,
-          templateUrl: $rootScope.config.app_domain+'/scripts/views/save-restore-dialog.html?ts='+Date.now(),
+          // templateUrl: $rootScope.config.app_domain+'/scripts/views/save-restore-dialog.html?ts='+Date.now(),
+          templateUrl: './scripts/views/save-restore-dialog.html?ts='+Date.now(),
           controller: 'ModalSaveAndRestore',
           //size: size,
           resolve: {
@@ -866,7 +890,8 @@ angular.module('nodebookApp')
         $scope.modal_video_open = true;
         var modalInstance = $modal.open({
           //animation: $scope.animationsEnabled,
-          templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          // templateUrl: $rootScope.config.app_domain+'/scripts/views/video-milestones-dialog.html?ts='+Date.now(),
+          templateUrl: './scripts/views/video-milestones-dialog.html?ts='+Date.now(),
           controller: 'ModalVideoMilestones',
           //size: size,
           resolve: {
@@ -1001,7 +1026,7 @@ angular.module('nodebookApp')
             if (item.row_type === 'code') {
 							configAce(item, scope, element);
             }
-            $http.get($rootScope.config.app_domain+'/scripts/'+template, { cache: $templateCache })
+            $http.get('./scripts/'+template, { cache: $templateCache })
               .then(function(templateContent) {
                 console.log(template, templateContent);
                 scope.rowmodel.loaded = true;
@@ -1056,18 +1081,48 @@ angular.module('nodebookApp')
 								var script = ed.getValue();
 								switch (item.row_type) {
 									case 'code':
-
-                    $http.post('/vm2', {
-                      script: script,
-                      item: item
-                    }).then((res) => {
-                      const result = res.data ? res.data.res : {};
-                      const row = $rootScope.jsNotebook.rows.indexOf(item);
+                    // Detect if VM2 is enabled
+                  $http.get('/vm2').then(function(res) {
+                    // TODO: Add condition that detects this endpoint return true
+                    if (res && res.data && res.data.enabled) {
+                      return $http.post('/vm2', {
+                        script: script,
+                        item: item
+                      }).then((res) => {
+                        const result = res.data ? res.data.res : {};
+                        const row = $rootScope.jsNotebook.rows.indexOf(item);
+                        if(row !== -1){
+                          $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
+                          $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
+                        }
+                      });
+                    }
+                    // TODO: This needs refactoring
+                    var row = $rootScope.jsNotebook.rows.indexOf(item);
+                    var result = scopeEval(window.evalContext, script);
+                    if(row !== -1){
+                      $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
+                      $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
+                    }
+                    if (result.stderr === '') {
+                      window.evalContext = result.scope;
+                    }
+                    // throw new Error('VM2 Not enabled!');
+                  }).catch(function(e) {
+                    console.log('VM2 contact failed', e);
+                    // https://stackoverflow.com/questions/9781285/specify-scope-for-eval-in-javascript
+                    if (e.status === 404 || e.message === 'VM2 Not enabled!') {
+                      var row = $rootScope.jsNotebook.rows.indexOf(item);
+                      var result = scopeEval(window.evalContext, script);
                       if(row !== -1){
                         $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
                         $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
                       }
-                    });
+                      if (result.stderr === '') {
+                        window.evalContext = result.scope;
+                      }
+                    }
+                  });
 										// ed.execCommand("turnoffedition");
 									break;
 									case 'markdown':

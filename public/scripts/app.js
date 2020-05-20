@@ -3,6 +3,7 @@
 $(window).load(function(){
     $('.preloader').fadeOut(1000); // set duration in brackets
 });
+window.evalContext = function() { };
 
 /*
 $(function() {
@@ -311,11 +312,11 @@ angular
     $routeProvider
       .when('/', {
         controller: 'NotebookCtrl',
-        templateUrl: '/scripts/views/notebook-view.html',
+        templateUrl: './scripts/views/notebook-view.html',
       })
       .when('/nb/:id', {
         controller: 'NotebookCtrl',
-        templateUrl: '/scripts/views/notebook-view.html',
+        templateUrl: './scripts/views/notebook-view.html',
       })
       .otherwise({
         redirectTo: '/'
@@ -386,6 +387,7 @@ angular
     });
     $rootScope.$on('$routeChangeSuccess', function () {
         console.log('$routeChangeSuccess');
+        window.evalContext = function() { };
         //hide loading gif
         $timeout(function(){
           $rootScope.layout.loading = false;

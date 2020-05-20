@@ -1,10 +1,11 @@
 {
   "name": "jsnotebook2",
-  "version": "0.0.19",
+  "version": "0.0.21",
   "description": "",
   "main": "index.js",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "commander": "^5.1.0",
     "express": "^4.16.4",
     "opener": "^1.5.1",
     "vm2": "^3.6.4"
