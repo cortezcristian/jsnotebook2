@@ -1097,7 +1097,17 @@ angular.module('nodebookApp')
                         }
                       });
                     }
-                    throw new Error('VM2 Not enabled!');
+                    // TODO: This needs refactoring
+                    var row = $rootScope.jsNotebook.rows.indexOf(item);
+                    var result = scopeEval(window.evalContext, script);
+                    if(row !== -1){
+                      $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
+                      $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
+                    }
+                    if (result.stderr === '') {
+                      window.evalContext = result.scope;
+                    }
+                    // throw new Error('VM2 Not enabled!');
                   }).catch(function(e) {
                     console.log('VM2 contact failed', e);
                     // https://stackoverflow.com/questions/9781285/specify-scope-for-eval-in-javascript
@@ -1111,21 +1121,6 @@ angular.module('nodebookApp')
                       if (result.stderr === '') {
                         window.evalContext = result.scope;
                       }
-                      /*
-                      try {
-                        var result = scopeEval(evalContext, script);
-                        // var result = scopeEval(document, script);
-                        if(row !== -1){
-                          $rootScope.jsNotebook.rows[row].stdout = result || '';
-                          $rootScope.jsNotebook.rows[row].stderr = '';
-                        }
-                      } catch (e) {
-                        if(row !== -1){
-                          $rootScope.jsNotebook.rows[row].stdout = '';
-                          $rootScope.jsNotebook.rows[row].stderr = e.toString() || '';
-                        }
-                      }
-                      */
                     }
                   });
 										// ed.execCommand("turnoffedition");
