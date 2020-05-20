@@ -1,5 +1,26 @@
 'use strict';
 
+// var evalContext = function() { };
+function scopeEval(scope, script) {
+  // return Function('return (' + script + ')').bind(scope)();
+  // return Function('"use strict";' + script + '').bind(scope)();
+  // https://stackoverflow.com/a/57943152/467034
+  try {
+    var res = new Function('' + script + '').bind(scope)();
+    return {
+      stdout: res,
+      stderr: '',
+      scope: scope
+    }
+  } catch (e) {
+    return {
+      stdout: '',
+      stderr: e.toString(),
+      scope: scope
+    }
+  }
+}
+
 /**
  * @ngdoc function
  * @name anyandgoApp.controller:NotebookCtrl
@@ -39,6 +60,8 @@ angular.module('nodebookApp')
       selected_row_type: 'markdown'
     };
     $rootScope.jsNotebook = $scope.notebook;
+    // evalContext = function() {};
+    // evalContext = null;
 
     // Edit title
     $scope.editingTitle = false;
@@ -1075,10 +1098,21 @@ angular.module('nodebookApp')
                     });
                   }).catch(function(e) {
                     console.log('VM2 contact failed', e);
+                    // https://stackoverflow.com/questions/9781285/specify-scope-for-eval-in-javascript
                     if (e.status === 404) {
                       var row = $rootScope.jsNotebook.rows.indexOf(item);
+                      var result = scopeEval(window.evalContext, script);
+                      if(row !== -1){
+                        $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
+                        $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
+                      }
+                      if (result.stderr === '') {
+                        window.evalContext = result.scope;
+                      }
+                      /*
                       try {
-                        var result = eval(script);
+                        var result = scopeEval(evalContext, script);
+                        // var result = scopeEval(document, script);
                         if(row !== -1){
                           $rootScope.jsNotebook.rows[row].stdout = result || '';
                           $rootScope.jsNotebook.rows[row].stderr = '';
@@ -1089,6 +1123,7 @@ angular.module('nodebookApp')
                           $rootScope.jsNotebook.rows[row].stderr = e.toString() || '';
                         }
                       }
+                      */
                     }
                   });
 										// ed.execCommand("turnoffedition");
