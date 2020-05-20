@@ -1084,22 +1084,24 @@ angular.module('nodebookApp')
                     // Detect if VM2 is enabled
                   $http.get('/vm2').then(function(res) {
                     // TODO: Add condition that detects this endpoint return true
-
-                    return $http.post('/vm2', {
-                      script: script,
-                      item: item
-                    }).then((res) => {
-                      const result = res.data ? res.data.res : {};
-                      const row = $rootScope.jsNotebook.rows.indexOf(item);
-                      if(row !== -1){
-                        $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
-                        $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
-                      }
-                    });
+                    if (res && res.data && res.data.enabled) {
+                      return $http.post('/vm2', {
+                        script: script,
+                        item: item
+                      }).then((res) => {
+                        const result = res.data ? res.data.res : {};
+                        const row = $rootScope.jsNotebook.rows.indexOf(item);
+                        if(row !== -1){
+                          $rootScope.jsNotebook.rows[row].stdout = result.stdout || '';
+                          $rootScope.jsNotebook.rows[row].stderr = result.stderr || '';
+                        }
+                      });
+                    }
+                    throw new Error('VM2 Not enabled!');
                   }).catch(function(e) {
                     console.log('VM2 contact failed', e);
                     // https://stackoverflow.com/questions/9781285/specify-scope-for-eval-in-javascript
-                    if (e.status === 404) {
+                    if (e.status === 404 || e.message === 'VM2 Not enabled!') {
                       var row = $rootScope.jsNotebook.rows.indexOf(item);
                       var result = scopeEval(window.evalContext, script);
                       if(row !== -1){
