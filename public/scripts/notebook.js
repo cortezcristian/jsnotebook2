@@ -78,9 +78,17 @@ angular.module('nodebookApp')
     // Options Collapsed
     $scope.menu_collapsed = true;
     // Read from LS
+    $scope.readCollapsePref = function() {
+      var option = LocalStorageServ.get('menu_opts_collapsed');
+      if (typeof option === 'boolean') {
+        $scope.menu_collapsed = option;
+      }
+    }
+    $scope.readCollapsePref();
     // Toggle
     $scope.toggleOptions = function() {
       $scope.menu_collapsed = !$scope.menu_collapsed;
+      LocalStorageServ.set('menu_opts_collapsed', $scope.menu_collapsed);
     }
 
     // Edit externalnotebook
