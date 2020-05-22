@@ -75,6 +75,14 @@ angular.module('nodebookApp')
       }
     }
 
+    // Options Collapsed
+    $scope.menu_collapsed = true;
+    // Read from LS
+    // Toggle
+    $scope.toggleOptions = function() {
+      $scope.menu_collapsed = !$scope.menu_collapsed;
+    }
+
     // Edit externalnotebook
     $scope.editingExternalNotebook = false;
     $scope.gotoExternalNotebook = function(status) {
