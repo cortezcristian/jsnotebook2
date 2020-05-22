@@ -40,7 +40,10 @@ body .con-toolbar{
   border-bottom:1px solid #d3d3d3;
 }
 body .con-toolbar > .container{
-  padding-top:4px
+  padding-top: 4px;
+  /* Fix FF */
+  padding-right: 0;
+  padding-left: 0;
 }
 body .con-toolbar .fa{
   font-size:16px
