@@ -32,6 +32,18 @@ angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
     $rootScope, $routeParams, $location, smoothScroll, Restangular, hotkeys, LocalStorageServ,
     NotebookStorageServ,   youtubeEmbedUtils) {
+    $scope.version = '0.0.1';
+    $scope.loadVersion = function() {
+      $http.get('./json/version.json')
+        .then(function(res) {
+          if (typeof res.data !== 'undefined' && angular.isDefined(res.data.version)) {
+            $scope.version = res.data.version;
+          }
+        }).catch(function(e) {
+          console.log(e);
+        })
+    };
+    $scope.loadVersion();
     // Notebook
     // Load Rows
     // Add Rows
