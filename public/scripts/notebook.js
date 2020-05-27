@@ -32,6 +32,18 @@ angular.module('nodebookApp')
   .controller('NotebookCtrl', function ($log, $scope, $timeout, $http, $modal,
     $rootScope, $routeParams, $location, smoothScroll, Restangular, hotkeys, LocalStorageServ,
     NotebookStorageServ,   youtubeEmbedUtils) {
+    $scope.version = '0.0.1';
+    $scope.loadVersion = function() {
+      $http.get('./json/version.json')
+        .then(function(res) {
+          if (typeof res.data !== 'undefined' && angular.isDefined(res.data.version)) {
+            $scope.version = res.data.version;
+          }
+        }).catch(function(e) {
+          console.log(e);
+        })
+    };
+    $scope.loadVersion();
     // Notebook
     // Load Rows
     // Add Rows
@@ -73,6 +85,22 @@ angular.module('nodebookApp')
       if (event.keyCode == 13) {
         $scope.editTitle(false);
       }
+    }
+
+    // Options Collapsed
+    $scope.menu_collapsed = true;
+    // Read from LS
+    $scope.readCollapsePref = function() {
+      var option = LocalStorageServ.get('menu_opts_collapsed');
+      if (typeof option === 'boolean') {
+        $scope.menu_collapsed = option;
+      }
+    }
+    $scope.readCollapsePref();
+    // Toggle
+    $scope.toggleOptions = function() {
+      $scope.menu_collapsed = !$scope.menu_collapsed;
+      LocalStorageServ.set('menu_opts_collapsed', $scope.menu_collapsed);
     }
 
     // Edit externalnotebook
