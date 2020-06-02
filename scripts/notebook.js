@@ -931,9 +931,15 @@ angular.module('nodebookApp')
 
         modalInstance.result.then(function (data) {
             if(data && data.rows && data.video && data.video.actions){
-                LocalStorageServ.set('jsnotebook', data);
+                // LocalStorageServ.set('jsnotebook', data);
                 // $scope.createNew(res.data);
-                $scope.loadFromLS();
+                // $scope.loadFromLS();
+                // Fix saving video datapoints
+                if ($scope.notebook.uniqueId && $scope.notebook.video
+                  && angular.isArray($scope.notebook.video.actions)) {
+                  $scope.notebook.video.actions = data.video.actions;
+                  // NotebookStorageServ.setContents($scope.notebook.uniqueId, $scope.notebook);
+                }
             }
 
             $scope.modal_video_open = false;
