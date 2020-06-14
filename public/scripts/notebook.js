@@ -509,7 +509,7 @@ angular.module('nodebookApp')
         // If edition is off, state false
         $scope.notebook.rows[index].editing = state;
 
-        if(state && row.row_type.match(/(formula|markdown)/) ){
+        if(state && row.row_type.match(/(formula|markdown|plantuml)/) ){
           // Set focus to editor
           $log.log("Set focus to editor");
           var ts = $scope.notebook.rows[index].ts;
@@ -1046,7 +1046,8 @@ angular.module('nodebookApp')
            'code': 'views/smartrow-editor.html',
            'asiento': 'views/smartrow-asiento.html',
            'markdown': 'views/smartrow-markdown.html',
-           'formula': 'views/smartrow-formula.html'
+           'formula': 'views/smartrow-formula.html',
+           'plantuml': 'views/smartrow-plantuml.html'
          };
 
 
@@ -1271,6 +1272,24 @@ angular.module('nodebookApp')
 			 }
 
    })
+  .directive("plantumlBind", function() {
+    return {
+      restrict: "A",
+      controller: ["$scope", "$element", "$attrs", function($scope, $element, $attrs) {
+        $scope.$on('$viewContentLoaded', function(){
+        });
+        $scope.$watch($attrs.plantumlBind, function(value) {
+          var skin = 'skinparam monochrome true \n'+value;
+          var encoded = plantumlEncoder.encode(skin);
+          console.log(encoded) // SrJGjLDmibBmICt9oGS0
+          var url = 'http://www.plantuml.com/plantuml/img/' + encoded;
+          var $script = angular.element("<img src='"+url+"' />");
+          $element.html("");
+          $element.append($script);
+        });
+      }]
+    };
+  })
   .directive("mathjaxBind", function() {
     return {
       restrict: "A",
